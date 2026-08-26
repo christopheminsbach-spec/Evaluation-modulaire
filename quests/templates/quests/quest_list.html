@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    Quêtes | Hyrule Quest Board
+{% endblock %}
+
+
+{% block content %}
+
+<section class="page-header">
+
+    <div>
+
+        <span class="section-eyebrow">
+            TABLEAU DES AVENTURIERS
+        </span>
+
+        <h1>
+            Quêtes d'Hyrule
+        </h1>
+
+        <p>
+            Découvrez les missions proposées
+            dans tout le royaume.
+        </p>
+
+    </div>
+
+</section>
+
+
+<section class="page-section">
+
+
+    <!-- =====================================
+         FILTRES
+    ====================================== -->
+
+    <div class="filter-bar">
+
+        <a
+            href="{% url 'quest_list' %}"
+            class="filter-button
+            {% if not current_status %}active{% endif %}"
+        >
+            📜 Toutes
+        </a>
+
+
+        <a
+            href="{% url 'quest_list' %}?status=available"
+            class="filter-button
+            {% if current_status == 'available' %}active{% endif %}"
+        >
+            ⚔ Disponibles
+        </a>
+
+
+        <a
+            href="{% url 'quest_list' %}?status=completed"
+            class="filter-button
+            {% if current_status == 'completed' %}active{% endif %}"
+        >
+            ✓ Terminées
+        </a>
+
+    </div>
+
+
+    <!-- =====================================
+         LISTE DES QUÊTES
+    ====================================== -->
+
+    <div class="quest-grid">
+
+        {% for quest in quests %}
+
+        <article class="quest-card">
+
+
+            <div class="quest-card-top">
+
+                {% if quest.completed %}
+
+                    <span class="status status-completed">
+                        ✓ Terminée
+                    </span>
+
+                {% else %}
+
+                    <span class="status status-available">
+                        ⚔ Disponible
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <h2>
+                {{ quest.title }}
+            </h2>
+
+
+            <div class="quest-location">
+
+                📍
+
+                <a
+                    href="{% url 'location_detail' quest.location.id %}"
+                >
+                    {{ quest.location.name }}
+                </a>
+
+            </div>
+
+
+            <p class="quest-description">
+
+                {{ quest.description|truncatewords:25 }}
+
+            </p>
+
+
+            <div class="quest-info">
+
+
+                <div>
+
+                    <span>
+                        Difficulté
+                    </span>
+
+                    <strong>
+                        {{ quest.difficulty }}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Récompense
+                    </span>
+
+                    <strong class="reward">
+                        💎 {{ quest.reward }} rubis
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="{% url 'quest_detail' quest.id %}"
+                class="quest-button"
+            >
+                Voir la quête →
+            </a>
+
+        </article>
+
+
+        {% empty %}
+
+        <div class="empty-state">
+
+            <div>
+                📜
+            </div>
+
+            <h2>
+                Aucune quête trouvée
+            </h2>
+
+            <p>
+                Aucune mission ne correspond
+                à ce filtre.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

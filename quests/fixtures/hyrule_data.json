@@ -1,0 +1,258 @@
+[
+  {
+    "model": "quests.location",
+    "pk": 1,
+    "fields": {
+      "name": "Village Cocorico",
+      "region": "Necluda"
+    }
+  },
+  {
+    "model": "quests.location",
+    "pk": 2,
+    "fields": {
+      "name": "Village d'Elimith",
+      "region": "Necluda"
+    }
+  },
+  {
+    "model": "quests.location",
+    "pk": 3,
+    "fields": {
+      "name": "Forêt Korogu",
+      "region": "Forêt d'Hyrule"
+    }
+  },
+  {
+    "model": "quests.location",
+    "pk": 4,
+    "fields": {
+      "name": "Domaine Zora",
+      "region": "Lanayru"
+    }
+  },
+  {
+    "model": "quests.location",
+    "pk": 5,
+    "fields": {
+      "name": "Cité Gerudo",
+      "region": "Désert Gerudo"
+    }
+  },
+  {
+    "model": "quests.location",
+    "pk": 6,
+    "fields": {
+      "name": "Village Piaf",
+      "region": "Hébra"
+    }
+  },
+  {
+    "model": "quests.location",
+    "pk": 7,
+    "fields": {
+      "name": "Château d'Hyrule",
+      "region": "Centre d'Hyrule"
+    }
+  },
+  {
+    "model": "quests.location",
+    "pk": 8,
+    "fields": {
+      "name": "Montagne de la Mort",
+      "region": "Ordinn"
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 1,
+    "fields": {
+      "title": "Le bouclier disparu",
+      "description": "Un ancien bouclier Sheikah appartenant au chef du village Cocorico a disparu. Retrouvez sa trace avant la prochaine cérémonie du village.",
+      "difficulty": "Facile",
+      "reward": 100,
+      "completed": false,
+      "location": 1
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 2,
+    "fields": {
+      "title": "Les poules de Cocorico",
+      "description": "Plusieurs poules se sont échappées dans les environs du village. Ramenez-les avant la tombée de la nuit.",
+      "difficulty": "Facile",
+      "reward": 50,
+      "completed": true,
+      "location": 1
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 3,
+    "fields": {
+      "title": "La livraison secrète Sheikah",
+      "description": "Une lettre importante doit être transportée discrètement jusqu'au laboratoire antique.",
+      "difficulty": "Moyenne",
+      "reward": 300,
+      "completed": false,
+      "location": 1
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 4,
+    "fields": {
+      "title": "Les récoltes mystérieuses",
+      "description": "Les fermiers du village d'Elimith constatent que leurs cultures disparaissent chaque nuit. Découvrez ce qui rôde autour des champs.",
+      "difficulty": "Facile",
+      "reward": 150,
+      "completed": true,
+      "location": 2
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 5,
+    "fields": {
+      "title": "Une étrange créature dans la forêt",
+      "description": "Des bruits inquiétants proviennent du cœur de la forêt Korogu. Découvrez quelle créature menace les habitants.",
+      "difficulty": "Moyenne",
+      "reward": 250,
+      "completed": false,
+      "location": 3
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 6,
+    "fields": {
+      "title": "Le chant perdu des Korogus",
+      "description": "Un ancien chant permettant de protéger la forêt a disparu. Aidez les Korogus à retrouver les paroles oubliées.",
+      "difficulty": "Difficile",
+      "reward": 700,
+      "completed": true,
+      "location": 3
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 7,
+    "fields": {
+      "title": "Le cristal des profondeurs",
+      "description": "Un cristal mystérieux aurait été retrouvé dans les profondeurs du Domaine Zora. Explorez les grottes pour retrouver cet artefact.",
+      "difficulty": "Difficile",
+      "reward": 900,
+      "completed": false,
+      "location": 4
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 8,
+    "fields": {
+      "title": "Les eaux empoisonnées",
+      "description": "Une étrange substance pollue la rivière principale. Trouvez son origine et restaurez la pureté des eaux.",
+      "difficulty": "Moyenne",
+      "reward": 400,
+      "completed": true,
+      "location": 4
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 9,
+    "fields": {
+      "title": "La caravane disparue",
+      "description": "Une caravane marchande n'est jamais arrivée à la Cité Gerudo. Explorez le désert pour retrouver les voyageurs.",
+      "difficulty": "Difficile",
+      "reward": 1200,
+      "completed": false,
+      "location": 5
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 10,
+    "fields": {
+      "title": "Les ruines du désert",
+      "description": "Des ruines anciennes viennent d'être découvertes sous le sable. Explorez-les et découvrez les secrets qu'elles renferment.",
+      "difficulty": "Difficile",
+      "reward": 1500,
+      "completed": false,
+      "location": 5
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 11,
+    "fields": {
+      "title": "Le nid abandonné",
+      "description": "Un jeune Piaf a perdu le chemin vers son nid familial. Aidez-le à retrouver sa famille malgré les vents violents.",
+      "difficulty": "Facile",
+      "reward": 120,
+      "completed": true,
+      "location": 6
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 12,
+    "fields": {
+      "title": "Tempête sur Hébra",
+      "description": "Une violente tempête bloque les routes commerciales. Aidez les habitants à sécuriser les passages montagneux.",
+      "difficulty": "Difficile",
+      "reward": 1000,
+      "completed": false,
+      "location": 6
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 13,
+    "fields": {
+      "title": "Le trésor du château",
+      "description": "Une ancienne salle secrète du château d'Hyrule contiendrait un coffre oublié depuis plusieurs siècles. Retrouvez son emplacement.",
+      "difficulty": "Difficile",
+      "reward": 2000,
+      "completed": false,
+      "location": 7
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 14,
+    "fields": {
+      "title": "Les archives royales",
+      "description": "Retrouvez les documents historiques disparus après la chute du royaume. Certaines archives pourraient révéler des informations importantes.",
+      "difficulty": "Moyenne",
+      "reward": 600,
+      "completed": true,
+      "location": 7
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 15,
+    "fields": {
+      "title": "Le minerai légendaire",
+      "description": "Les Gorons recherchent un minerai rare capable de renforcer les armes royales. Partez à sa recherche dans les profondeurs de la montagne.",
+      "difficulty": "Difficile",
+      "reward": 1800,
+      "completed": false,
+      "location": 8
+    }
+  },
+  {
+    "model": "quests.quest",
+    "pk": 16,
+    "fields": {
+      "title": "Le volcan en colère",
+      "description": "Des secousses inhabituelles annoncent une possible éruption. Aidez les Gorons à comprendre l'origine de ces phénomènes.",
+      "difficulty": "Difficile",
+      "reward": 2500,
+      "completed": false,
+      "location": 8
+    }
+  }
+]

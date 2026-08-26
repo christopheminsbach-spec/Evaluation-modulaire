@@ -1,0 +1,724 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Guide Zelda | Hyrule Quest Board
+{% endblock %}
+
+
+
+{% block content %}
+
+<section class="chat-page">
+
+
+    <!-- =====================================================
+         EN-TÊTE DU GUIDE
+    ====================================================== -->
+
+    <div class="chat-header">
+
+
+        <!-- PARTICULES -->
+
+        <div class="magic-particles">
+
+            <span class="magic-particle"></span>
+            <span class="magic-particle"></span>
+            <span class="magic-particle"></span>
+            <span class="magic-particle"></span>
+            <span class="magic-particle"></span>
+
+        </div>
+
+
+
+        <!-- ICÔNE SHEIKAH -->
+
+        <div class="chat-header-icon">
+
+            <img
+                src="{% static 'css/icons/sheikah-eye.svg' %}"
+                alt="Guide Zelda"
+                class="chat-icon"
+            >
+
+        </div>
+
+
+
+        <span class="section-eyebrow">
+            GUIDE D'HYRULE
+        </span>
+
+
+
+        <h1 class="hyrule-title">
+
+            Guide Zelda
+
+        </h1>
+
+
+
+        <p class="hyrule-subtitle">
+
+            Posez une question sur l'univers
+            de The Legend of Zelda.
+
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CONTENEUR DU CHAT
+    ====================================================== -->
+
+    <div class="chat-container">
+
+
+        <!-- =================================================
+             ZONE DE CONVERSATION
+        ================================================== -->
+
+        <div
+            id="chat-messages"
+            class="chat-messages"
+        >
+
+
+            <!-- =============================================
+                 MESSAGE INITIAL DU GUIDE
+            ============================================== -->
+
+            <div class="message assistant-message">
+
+
+                <!-- AVATAR -->
+
+                <div class="message-avatar">
+
+                    <img
+                        src="{% static 'css/icons/sheikah-eye.svg' %}"
+                        alt="Guide d'Hyrule"
+                    >
+
+                </div>
+
+
+
+                <!-- MESSAGE -->
+
+                <div class="message-content">
+
+
+                    <strong>
+                        Guide d'Hyrule
+                    </strong>
+
+
+                    <p>
+                        Bienvenue, aventurier !
+                    </p>
+
+
+                    <p>
+
+                        Je peux répondre à tes questions
+                        concernant l'univers de Zelda.
+
+                    </p>
+
+
+                    <p>
+                        Par exemple :
+                    </p>
+
+
+                    <ul>
+
+                        <li>
+                            Qui est la princesse Zelda ?
+                        </li>
+
+                        <li>
+                            Où se trouve le Domaine Zora ?
+                        </li>
+
+                        <li>
+                            Qui est Ganondorf ?
+                        </li>
+
+                        <li>
+                            Quels sont les différents peuples
+                            d'Hyrule ?
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             FORMULAIRE
+        ================================================== -->
+
+        <form
+            id="chat-form"
+            class="chat-form"
+        >
+
+            {% csrf_token %}
+
+
+
+            <div class="chat-input-wrapper">
+
+
+                <!-- INPUT -->
+
+                <div class="chat-input-icon">
+
+                    <img
+                        src="{% static 'css/icons/master-sword.svg' %}"
+                        alt=""
+                    >
+
+                </div>
+
+
+                <input
+                    type="text"
+                    id="message"
+                    name="message"
+                    placeholder="Posez votre question sur Zelda..."
+                    autocomplete="off"
+                    required
+                >
+
+
+
+                <!-- BOUTON -->
+
+                <button
+                    type="submit"
+                    id="send-button"
+                    class="btn btn-primary"
+                >
+
+                    <img
+                        src="{% static 'css/icons/sheikah-eye.svg' %}"
+                        alt=""
+                        class="button-icon"
+                    >
+
+                    <span>
+                        Envoyer
+                    </span>
+
+                </button>
+
+            </div>
+
+        </form>
+
+
+
+        <!-- =================================================
+             STATUT
+        ================================================== -->
+
+        <div
+            id="chat-status"
+            class="chat-status"
+        ></div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         INFORMATIONS
+    ====================================================== -->
+
+    <div class="chat-info-grid">
+
+
+        <!-- UNIVERS -->
+
+        <article class="chat-info-card">
+
+            <img
+                src="{% static 'css/icons/triforce.svg' %}"
+                alt=""
+                class="hyrule-icon"
+            >
+
+
+            <h3>
+                Univers Zelda
+            </h3>
+
+
+            <p>
+
+                Posez vos questions concernant
+                les personnages, les lieux et
+                l'histoire de Zelda.
+
+            </p>
+
+        </article>
+
+
+
+        <!-- CONSEILS -->
+
+        <article class="chat-info-card">
+
+            <img
+                src="{% static 'css/icons/fairy.svg' %}"
+                alt=""
+                class="fairy-icon"
+            >
+
+
+            <h3>
+                Conseil du guide
+            </h3>
+
+
+            <p>
+
+                Soyez précis dans vos questions
+                pour obtenir les meilleures réponses.
+
+            </p>
+
+        </article>
+
+
+
+        <!-- PROTECTION -->
+
+        <article class="chat-info-card">
+
+            <img
+                src="{% static 'css/icons/hylian-shield.svg' %}"
+                alt=""
+                class="shield-icon"
+            >
+
+
+            <h3>
+                Aide à l'aventure
+            </h3>
+
+
+            <p>
+
+                Préparez votre prochaine aventure
+                grâce aux connaissances du guide.
+
+            </p>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT DU CHAT
+====================================================== -->
+
+<script>
+
+const form =
+    document.getElementById("chat-form");
+
+const input =
+    document.getElementById("message");
+
+const messages =
+    document.getElementById("chat-messages");
+
+const button =
+    document.getElementById("send-button");
+
+const status =
+    document.getElementById("chat-status");
+
+
+
+/* =====================================================
+   AJOUTER UN MESSAGE
+===================================================== */
+
+function addMessage(text, type) {
+
+    const message =
+        document.createElement("div");
+
+
+    message.className =
+        "message " + type;
+
+
+
+    /* ================================================
+       AVATAR
+    ================================================= */
+
+    const avatar =
+        document.createElement("div");
+
+
+    avatar.className =
+        "message-avatar";
+
+
+
+    const avatarImage =
+        document.createElement("img");
+
+
+
+    if (type === "user-message") {
+
+        avatarImage.src =
+            "{% static 'css/icons/master-sword.svg' %}";
+
+        avatarImage.alt =
+            "Aventurier";
+
+    } else {
+
+        avatarImage.src =
+            "{% static 'css/icons/sheikah-eye.svg' %}";
+
+        avatarImage.alt =
+            "Guide d'Hyrule";
+
+    }
+
+
+
+    avatar.appendChild(
+        avatarImage
+    );
+
+
+
+    /* ================================================
+       CONTENU
+    ================================================= */
+
+    const content =
+        document.createElement("div");
+
+
+    content.className =
+        "message-content";
+
+
+
+    /* NOM */
+
+    const name =
+        document.createElement("strong");
+
+
+    name.textContent =
+        type === "user-message"
+            ? "Vous"
+            : "Guide d'Hyrule";
+
+
+
+    /* TEXTE */
+
+    const paragraph =
+        document.createElement("p");
+
+
+    paragraph.textContent =
+        text;
+
+
+
+    /* ================================================
+       ASSEMBLAGE
+    ================================================= */
+
+    content.appendChild(
+        name
+    );
+
+
+    content.appendChild(
+        paragraph
+    );
+
+
+    message.appendChild(
+        avatar
+    );
+
+
+    message.appendChild(
+        content
+    );
+
+
+    messages.appendChild(
+        message
+    );
+
+
+
+    /* SCROLL AUTOMATIQUE */
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+}
+
+
+
+/* =====================================================
+   ENVOI DU MESSAGE
+===================================================== */
+
+form.addEventListener(
+    "submit",
+    async function(event) {
+
+
+        event.preventDefault();
+
+
+
+        const message =
+            input.value.trim();
+
+
+
+        if (!message) {
+
+            return;
+
+        }
+
+
+
+        /* MESSAGE UTILISATEUR */
+
+        addMessage(
+            message,
+            "user-message"
+        );
+
+
+
+        /* RESET INPUT */
+
+        input.value = "";
+
+        input.disabled = true;
+
+        button.disabled = true;
+
+
+
+        /* BOUTON EN CHARGEMENT */
+
+        button.innerHTML = `
+
+            <img
+                src="{% static 'css/icons/fairy.svg' %}"
+                alt=""
+                class="button-icon fairy-loading"
+            >
+
+            <span>
+                Réflexion...
+            </span>
+
+        `;
+
+
+
+        /* STATUT */
+
+        status.innerHTML = `
+
+            <img
+                src="{% static 'css/icons/fairy.svg' %}"
+                alt=""
+                class="status-icon"
+            >
+
+            <span>
+                Le Guide d'Hyrule réfléchit...
+            </span>
+
+        `;
+
+
+
+        /* =============================================
+           FORM DATA
+        ============================================== */
+
+        const formData =
+            new FormData();
+
+
+
+        formData.append(
+            "message",
+            message
+        );
+
+
+
+        /* =============================================
+           CSRF
+        ============================================== */
+
+        const csrfToken =
+            document.querySelector(
+                "[name=csrfmiddlewaretoken]"
+            ).value;
+
+
+
+        try {
+
+
+            /* =========================================
+               REQUÊTE DJANGO
+            ========================================== */
+
+            const response =
+                await fetch(
+                    "{% url 'chat' %}",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "X-CSRFToken":
+                                csrfToken
+
+                        },
+
+                        body: formData
+
+                    }
+                );
+
+
+
+            /* =========================================
+               RÉPONSE
+            ========================================== */
+
+            const data =
+                await response.json();
+
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error ||
+                    "Une erreur est survenue."
+                );
+
+            }
+
+
+
+            /* =========================================
+               MESSAGE DU GUIDE
+            ========================================== */
+
+            addMessage(
+                data.answer,
+                "assistant-message"
+            );
+
+
+        } catch (error) {
+
+
+            /* =========================================
+               MESSAGE D'ERREUR
+            ========================================== */
+
+            addMessage(
+                error.message,
+                "error-message"
+            );
+
+        } finally {
+
+
+            /* =========================================
+               RÉACTIVER
+            ========================================== */
+
+            input.disabled =
+                false;
+
+
+            button.disabled =
+                false;
+
+
+
+            button.innerHTML = `
+
+                <img
+                    src="{% static 'css/icons/sheikah-eye.svg' %}"
+                    alt=""
+                    class="button-icon"
+                >
+
+                <span>
+                    Envoyer
+                </span>
+
+            `;
+
+
+
+            status.innerHTML = "";
+
+
+
+            input.focus();
+
+        }
+
+    }
+);
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,526 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Accueil | Hyrule Quest Board
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <!-- Particules magiques -->
+
+    <div class="magic-particles">
+
+        <span class="magic-particle"></span>
+        <span class="magic-particle"></span>
+        <span class="magic-particle"></span>
+        <span class="magic-particle"></span>
+        <span class="magic-particle"></span>
+
+    </div>
+
+
+
+    <div class="hero-content">
+
+
+        <!-- TRIFORCE SVG -->
+
+        <div class="hero-icon-wrapper">
+
+            <img
+                src="{% static 'css/icons/triforce.svg' %}"
+                alt="Triforce"
+                class="triforce-icon"
+            >
+
+        </div>
+
+
+
+        <!-- PETIT BADGE -->
+
+        <div class="hero-badge">
+
+            <img
+                src="{% static 'css/icons/sheikah-eye.svg' %}"
+                alt=""
+                class="badge-icon"
+            >
+
+            <span>
+                TABLEAU DES AVENTURIERS
+            </span>
+
+        </div>
+
+
+
+        <!-- TITRE -->
+
+        <h1 class="hyrule-title">
+
+            Hyrule
+
+            <span>
+                Quest Board
+            </span>
+
+        </h1>
+
+
+
+        <!-- SOUS-TITRE -->
+
+        <p class="hero-subtitle hyrule-subtitle">
+
+            Les aventures commencent ici.
+
+        </p>
+
+
+
+        <!-- DESCRIPTION -->
+
+        <p class="hero-description">
+
+            Explorez les régions d'Hyrule,
+            acceptez de nouvelles missions
+            et devenez le héros dont le royaume
+            a besoin.
+
+        </p>
+
+
+
+        <!-- BOUTONS -->
+
+        <div class="hero-actions">
+
+    <a
+        href="{% url 'quest_list' %}"
+        class="btn btn-primary"
+    >
+
+        <img
+            src="{% static 'css/icons/master-sword.svg' %}"
+            alt=""
+            class="button-icon"
+        >
+
+        <span>
+            Voir les quêtes
+        </span>
+
+    </a>
+
+
+    <a
+        href="{% url 'location_list' %}"
+        class="btn btn-secondary"
+    >
+
+        <img
+            src="{% static 'css/icons/hyrule-map.svg' %}"
+            alt=""
+            class="button-icon"
+        >
+
+        <span>
+            Explorer Hyrule
+        </span>
+
+    </a>
+
+</div>
+
+</section>
+
+
+
+<!-- =========================================================
+     STATISTIQUES
+========================================================= -->
+
+<section class="stats-section">
+
+
+    <div class="section-heading">
+
+        <span class="section-eyebrow">
+
+            TABLEAU DE BORD
+
+        </span>
+
+
+        <h2>
+
+            Situation du royaume
+
+        </h2>
+
+
+        <p>
+
+            Les informations sont calculées
+            directement depuis la base de données.
+
+        </p>
+
+    </div>
+
+
+
+    <div class="stats-grid">
+
+
+        <!-- =================================================
+             TOTAL
+        ================================================== -->
+
+        <article class="stat-card">
+
+
+            <div class="stat-icon">
+
+                <img
+                    src="{% static 'css/icons/triforce.svg' %}"
+                    alt=""
+                    class="hyrule-icon"
+                >
+
+            </div>
+
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+
+                    Quêtes du royaume
+
+                </span>
+
+
+                <strong class="stat-number">
+
+                    {{ total }}
+
+                </strong>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             DISPONIBLES
+        ================================================== -->
+
+        <article class="stat-card available-card">
+
+
+            <div class="stat-icon">
+
+                <img
+                    src="{% static 'css/icons/master-sword.svg' %}"
+                    alt=""
+                    class="sword-icon"
+                >
+
+            </div>
+
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+
+                    Quêtes disponibles
+
+                </span>
+
+
+                <strong class="stat-number">
+
+                    {{ available }}
+
+                </strong>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             TERMINÉES
+        ================================================== -->
+
+        <article class="stat-card completed-card">
+
+
+            <div class="stat-icon">
+
+                <img
+                    src="{% static 'css/icons/hylian-shield.svg' %}"
+                    alt=""
+                    class="shield-icon"
+                >
+
+            </div>
+
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+
+                    Quêtes terminées
+
+                </span>
+
+
+                <strong class="stat-number">
+
+                    {{ completed }}
+
+                </strong>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             RÉCOMPENSES
+        ================================================== -->
+
+        <article class="stat-card reward-card">
+
+
+            <div class="stat-icon">
+
+                <img
+                    src="{% static 'css/icons/rupee.svg' %}"
+                    alt=""
+                    class="rupee-icon"
+                >
+
+            </div>
+
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+
+                    Récompenses proposées
+
+                </span>
+
+
+                <strong class="stat-number">
+
+                    {{ total_rewards }}
+
+                </strong>
+
+
+                <span class="stat-unit">
+
+                    rubis
+
+                </span>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     PRÉSENTATION D'HYRULE
+========================================================= -->
+
+<section class="intro-section">
+
+
+    <div class="intro-card">
+
+
+        <!-- ILLUSTRATION -->
+
+        <div class="intro-symbol">
+
+
+            <img
+                src="{% static 'css/icons/hylian-shield.svg' %}"
+                alt="Bouclier Hylien"
+                class="shield-icon"
+            >
+
+
+            <img
+                src="{% static 'css/icons/fairy.svg' %}"
+                alt=""
+                class="fairy-icon intro-fairy"
+            >
+
+        </div>
+
+
+
+        <!-- TEXTE -->
+
+        <div class="intro-content">
+
+
+            <span class="section-eyebrow">
+
+                LE ROYAUME D'HYRULE
+
+            </span>
+
+
+            <h2>
+
+                Une nouvelle génération
+                d'aventuriers
+
+            </h2>
+
+
+            <p>
+
+                Le royaume d'Hyrule possède désormais
+                un système centralisé permettant aux
+                aventuriers de consulter les missions
+                proposées par les habitants.
+
+            </p>
+
+
+            <p>
+
+                Du paisible village Cocorico aux
+                terres dangereuses de la Montagne
+                de la Mort, chaque région possède
+                ses propres défis.
+
+            </p>
+
+
+            <a
+                href="{% url 'location_list' %}"
+                class="card-link"
+            >
+
+                <span>
+                    Explorer les régions
+                </span>
+
+                <span>
+                    →
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     APPEL À L'AVENTURE
+========================================================= -->
+
+<section class="adventure-section">
+
+
+    <div class="adventure-card">
+
+
+        <!-- TEXTE -->
+
+        <div class="adventure-content">
+
+
+            <div class="adventure-icon">
+
+                <img
+                    src="{% static 'css/icons/master-sword.svg' %}"
+                    alt=""
+                    class="sword-icon"
+                >
+
+            </div>
+
+
+            <span class="section-eyebrow">
+
+                UNE NOUVELLE AVENTURE VOUS ATTEND
+
+            </span>
+
+
+            <h2>
+
+                Quelle sera votre prochaine quête ?
+
+            </h2>
+
+
+            <p>
+
+                Consultez les missions disponibles
+                et choisissez votre prochaine destination.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- BOUTON -->
+
+        <a
+            href="{% url 'quest_list' %}?status=available"
+            class="btn btn-primary"
+        >
+
+            <img
+                src="{% static 'css/icons/master-sword.svg' %}"
+                alt=""
+                class="button-icon"
+            >
+
+            <span>
+                Découvrir les missions
+            </span>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+
+{% endblock %}

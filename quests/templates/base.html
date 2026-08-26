@@ -1,0 +1,268 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <!-- CSS principal -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+    <!-- Animations Hyrule -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/hyrule-animations.css' %}"
+    >
+
+    <title>
+        {% block title %}
+            Hyrule Quest Board
+        {% endblock %}
+    </title>
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         NAVIGATION PRINCIPALE
+    =========================================== -->
+
+    <header class="site-header">
+
+        <div class="nav-container">
+
+
+            <!-- ==================================
+                 LOGO
+            =================================== -->
+
+            <a
+                href="{% url 'home' %}"
+                class="logo"
+            >
+
+                <img
+                    src="{% static 'css/icons/triforce.svg' %}"
+                    alt="Hyrule"
+                    class="logo-icon"
+                >
+
+                <span class="logo-text">
+
+                    Hyrule
+
+                    <strong>
+                        Quest Board
+                    </strong>
+
+                </span>
+
+            </a>
+
+
+
+            <!-- ==================================
+                 MENU
+            =================================== -->
+
+            <nav class="main-nav">
+
+
+                <!-- ACCUEIL -->
+
+                <a
+                    href="{% url 'home' %}"
+                    class="nav-link"
+                >
+
+                    <img
+                        src="{% static 'css/icons/triforce.svg' %}"
+                        alt=""
+                        class="nav-icon"
+                    >
+
+                    <span>
+                        Accueil
+                    </span>
+
+                </a>
+
+
+
+                <!-- QUÊTES -->
+
+                <a
+                    href="{% url 'quest_list' %}"
+                    class="nav-link"
+                >
+
+                    <img
+                        src="{% static 'css/icons/master-sword.svg' %}"
+                        alt=""
+                        class="nav-icon"
+                    >
+
+                    <span>
+                        Quêtes
+                    </span>
+
+                </a>
+
+
+
+                <!-- EXPLORER HYRULE -->
+
+                <a
+                    href="{% url 'location_list' %}"
+                    class="nav-link"
+                >
+
+                    <img
+                        src="{% static 'css/icons/hyrule-map.svg' %}"
+                        alt=""
+                        class="nav-icon"
+                    >
+
+                    <span>
+                        Explorer Hyrule
+                    </span>
+
+                </a>
+
+
+
+                <!-- GUIDE ZELDA -->
+
+                <a
+                    href="{% url 'chat' %}"
+                    class="nav-link"
+                >
+
+                    <img
+                        src="{% static 'css/icons/sheikah-eye.svg' %}"
+                        alt=""
+                        class="nav-icon"
+                    >
+
+                    <span>
+                        Guide Zelda
+                    </span>
+
+                </a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ==========================================
+         CONTENU PRINCIPAL
+    =========================================== -->
+
+    <main>
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+
+
+    <!-- ==========================================
+         FOOTER
+    =========================================== -->
+
+    <footer class="site-footer">
+
+        <div class="footer-container">
+
+
+            <!-- IDENTITÉ -->
+
+            <div class="footer-brand">
+
+                <h3>
+
+                    <img
+                        src="{% static 'css/icons/triforce.svg' %}"
+                        alt=""
+                        class="footer-icon"
+                    >
+
+                    Hyrule Quest Board
+
+                </h3>
+
+
+                <p>
+                    Le tableau officiel des aventures
+                    du royaume d'Hyrule.
+                </p>
+
+            </div>
+
+
+
+            <!-- LIENS -->
+
+            <div class="footer-links">
+
+                <a href="{% url 'home' %}">
+                    Accueil
+                </a>
+
+                <a href="{% url 'quest_list' %}">
+                    Quêtes
+                </a>
+
+                <a href="{% url 'location_list' %}">
+                    Lieux
+                </a>
+
+                <a href="{% url 'chat' %}">
+                    Guide Zelda
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- FOOTER BOTTOM -->
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 Hyrule Quest Board
+            </p>
+
+            <p>
+                Les aventures commencent ici.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+</body>
+
+</html>

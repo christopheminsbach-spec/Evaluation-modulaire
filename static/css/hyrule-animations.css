@@ -1,0 +1,500 @@
+/* =========================================================
+   HYRULE QUEST BOARD
+   ANIMATIONS DES ICÔNES SVG
+========================================================= */
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root {
+  --hyrule-gold: #d4af37;
+
+  --hyrule-gold-light: #f1d778;
+
+  --hyrule-green: #1d4935;
+
+  --hyrule-green-light: #3d8b5f;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+@keyframes floating {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes floatingSlow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-12px) rotate(4deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes swordFloat {
+  0%,
+  100% {
+    transform: rotate(-4deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(4deg) translateY(-7px);
+  }
+}
+
+@keyframes shieldPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08) rotate(2deg);
+  }
+}
+
+@keyframes rupeeFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(6deg);
+  }
+}
+
+@keyframes magicPulse {
+  0%,
+  100% {
+    transform: scale(1);
+
+    filter: drop-shadow(0 0 3px rgba(212, 175, 55, 0.2));
+  }
+
+  50% {
+    transform: scale(1.1);
+
+    filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.8));
+  }
+}
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo-icon {
+  width: 48px;
+  height: 48px;
+
+  object-fit: contain;
+
+  animation: floatingSlow 5s ease-in-out infinite;
+
+  transition:
+    transform 0.35s ease,
+    filter 0.35s ease;
+}
+
+.logo:hover .logo-icon {
+  transform: scale(1.12) rotate(5deg);
+
+  filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.8));
+}
+
+/* =========================================================
+   ICÔNES NAVIGATION
+========================================================= */
+
+.nav-icon {
+  width: 23px;
+  height: 23px;
+
+  object-fit: contain;
+
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+.nav-link:hover .nav-icon {
+  transform: scale(1.15) translateY(-2px);
+
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.8));
+}
+
+/* =========================================================
+   ICÔNE TRIFORCE
+========================================================= */
+
+.triforce-icon {
+  width: 100px;
+  height: 100px;
+
+  object-fit: contain;
+
+  animation: floating 4s ease-in-out infinite;
+
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.45));
+}
+
+/* =========================================================
+   MASTER SWORD
+========================================================= */
+
+.sword-icon {
+  width: 60px;
+  height: 60px;
+
+  object-fit: contain;
+
+  animation: swordFloat 2.8s ease-in-out infinite;
+
+  transition: filter 0.3s ease;
+}
+
+.sword-icon:hover {
+  filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.9));
+}
+
+/* =========================================================
+   BOUCLIER HYLIEN
+========================================================= */
+
+.shield-icon {
+  width: 60px;
+  height: 60px;
+
+  object-fit: contain;
+
+  animation: shieldPulse 3s ease-in-out infinite;
+}
+
+/* =========================================================
+   CARTE D'HYRULE
+========================================================= */
+
+.map-icon {
+  width: 70px;
+  height: 70px;
+
+  object-fit: contain;
+
+  animation: floating 5s ease-in-out infinite;
+}
+
+.map-icon:hover {
+  filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.8));
+}
+
+/* =========================================================
+   ŒIL SHEIKAH
+========================================================= */
+
+.chat-icon {
+  width: 70px;
+  height: 70px;
+
+  object-fit: contain;
+
+  animation: magicPulse 2.5s ease-in-out infinite;
+}
+
+/* =========================================================
+   RUBIS
+========================================================= */
+
+.rupee-icon {
+  width: 45px;
+  height: 45px;
+
+  object-fit: contain;
+
+  animation: rupeeFloat 3s ease-in-out infinite;
+}
+
+/* =========================================================
+   CŒUR
+========================================================= */
+
+.heart-icon {
+  width: 40px;
+  height: 40px;
+
+  object-fit: contain;
+
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* =========================================================
+   FÉE
+========================================================= */
+
+.fairy-icon {
+  width: 45px;
+  height: 45px;
+
+  object-fit: contain;
+
+  animation: floatingSlow 4s ease-in-out infinite;
+
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.55));
+}
+
+/* =========================================================
+   CARTES
+========================================================= */
+
+.quest-card,
+.location-card,
+.mini-quest-card {
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.quest-card:hover,
+.location-card:hover,
+.mini-quest-card:hover {
+  transform: translateY(-8px);
+
+  box-shadow: 0 18px 40px rgba(20, 50, 35, 0.18);
+}
+
+/* =========================================================
+   ICÔNES DANS LES CARTES
+========================================================= */
+
+.quest-card:hover .sword-icon {
+  animation: swordFloat 1.4s ease-in-out infinite;
+}
+
+.location-card:hover .map-icon {
+  transform: scale(1.1) rotate(-3deg);
+
+  filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.8));
+}
+
+.quest-card:hover .shield-icon {
+  transform: scale(1.1);
+
+  filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.8));
+}
+
+/* =========================================================
+   BOUTONS
+========================================================= */
+
+.btn,
+.quest-button,
+.filter-button,
+.send-button {
+  position: relative;
+
+  overflow: hidden;
+}
+
+.btn::after,
+.quest-button::after,
+.filter-button::after,
+.send-button::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+
+  left: -120%;
+
+  width: 60%;
+
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+
+  transform: skewX(-20deg);
+
+  transition: left 0.5s ease;
+}
+
+.btn:hover::after,
+.quest-button:hover::after,
+.filter-button:hover::after,
+.send-button:hover::after {
+  left: 130%;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer-icon {
+  width: 32px;
+  height: 32px;
+
+  object-fit: contain;
+
+  vertical-align: middle;
+
+  margin-right: 8px;
+
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+.footer-brand h3:hover .footer-icon {
+  transform: rotate(8deg) scale(1.1);
+
+  filter: drop-shadow(0 0 9px rgba(212, 175, 55, 0.8));
+}
+
+/* =========================================================
+   PARTICULES
+========================================================= */
+
+.magic-particles {
+  position: absolute;
+
+  inset: 0;
+
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+.magic-particle {
+  position: absolute;
+
+  width: 4px;
+  height: 4px;
+
+  border-radius: 50%;
+
+  background: var(--hyrule-gold-light);
+
+  box-shadow: 0 0 10px var(--hyrule-gold);
+
+  animation: floatingSlow 4s ease-in-out infinite;
+}
+
+.magic-particle:nth-child(1) {
+  left: 10%;
+  top: 30%;
+}
+
+.magic-particle:nth-child(2) {
+  left: 25%;
+  top: 65%;
+
+  animation-delay: 0.8s;
+}
+
+.magic-particle:nth-child(3) {
+  left: 72%;
+  top: 25%;
+
+  animation-delay: 1.4s;
+}
+
+.magic-particle:nth-child(4) {
+  left: 88%;
+  top: 60%;
+
+  animation-delay: 2s;
+}
+
+.magic-particle:nth-child(5) {
+  left: 50%;
+  top: 15%;
+
+  animation-delay: 2.6s;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .nav-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .sword-icon,
+  .shield-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .map-icon,
+  .chat-icon {
+    width: 55px;
+    height: 55px;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITÉ
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+
+    animation-iteration-count: 1 !important;
+
+    transition-duration: 0.01ms !important;
+
+    scroll-behavior: auto !important;
+  }
+}

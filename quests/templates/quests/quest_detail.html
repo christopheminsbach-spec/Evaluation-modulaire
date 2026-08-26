@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+<div class="detail-magic">
+
+    <span class="zelda-shield">
+        🛡️
+    </span>
+
+    <span class="zelda-sword">
+        ⚔️
+    </span>
+
+</div>
+
+{% block title %}
+    {{ quest.title }} | Hyrule Quest Board
+{% endblock %}
+
+
+{% block content %}
+
+<section class="detail-section">
+
+
+    <a
+        href="{% url 'quest_list' %}"
+        class="back-link"
+    >
+        ← Retour aux quêtes
+    </a>
+
+
+    <article class="quest-detail-card">
+
+
+        <div class="detail-top">
+
+            {% if quest.completed %}
+
+                <span class="status status-completed">
+                    ✓ Quête terminée
+                </span>
+
+            {% else %}
+
+                <span class="status status-available">
+                    ⚔ Quête disponible
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+        <span class="section-eyebrow">
+            MISSION D'HYRULE
+        </span>
+
+
+        <h1>
+            {{ quest.title }}
+        </h1>
+
+
+        <a
+            href="{% url 'location_detail' quest.location.id %}"
+            class="detail-location"
+        >
+            📍 {{ quest.location.name }}
+        </a>
+
+
+        <div class="detail-grid">
+
+
+            <div class="detail-info">
+
+                <span>
+                    Région
+                </span>
+
+                <strong>
+                    {{ quest.location.region }}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-info">
+
+                <span>
+                    Difficulté
+                </span>
+
+                <strong>
+                    {{ quest.difficulty }}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-info">
+
+    <span>
+        Récompense
+    </span>
+
+    <strong class="reward">
+
+        <span class="rupee">
+            💎
+        </span>
+
+        {{ quest.reward }}
+        rubis
+
+    </strong>
+
+</div>
+
+
+            <div class="detail-info">
+
+                <span>
+                    Statut
+                </span>
+
+                {% if quest.completed %}
+
+                    <strong class="text-completed">
+                        Terminée
+                    </strong>
+
+                {% else %}
+
+                    <strong class="text-available">
+                        Disponible
+                    </strong>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="description-box">
+
+            <span class="section-eyebrow">
+                DESCRIPTION DE LA MISSION
+            </span>
+
+            <p>
+                {{ quest.description }}
+            </p>
+
+        </div>
+
+
+        <div class="detail-actions">
+
+            <a
+                href="{% url 'quest_list' %}"
+                class="btn btn-secondary-dark"
+            >
+                ← Retour aux quêtes
+            </a>
+
+
+            <a
+                href="{% url 'location_detail' quest.location.id %}"
+                class="btn btn-primary"
+            >
+                Explorer {{ quest.location.name }}
+            </a>
+
+        </div>
+
+    </article>
+
+</section>
+
+{% endblock %}

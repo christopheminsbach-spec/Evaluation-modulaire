@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Explorer Hyrule | Hyrule Quest Board
+{% endblock %}
+
+
+{% block content %}
+
+<section class="hyrule-explorer">
+
+
+    <!-- =====================================================
+         EN-TÊTE
+    ====================================================== -->
+
+    <div class="explorer-header">
+
+        <div class="explorer-header-icon">
+
+            <img
+                src="{% static 'css/icons/triforce.svg' %}"
+                alt=""
+            >
+
+        </div>
+
+
+        <div>
+
+            <span class="section-eyebrow">
+                CARTE DU ROYAUME
+            </span>
+
+            <h1 class="hyrule-title">
+                Explorer Hyrule
+            </h1>
+
+            <p>
+                Explorez les différentes régions du royaume
+                et découvrez les quêtes disponibles.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CARTE
+    ====================================================== -->
+
+    <div class="world-map-container">
+
+
+        <!-- EFFET LUMINEUX -->
+
+        <div class="map-glow"></div>
+
+
+        <!-- CARTE -->
+
+        <div class="world-map">
+
+
+            <img
+                src="{% static 'images/hyrule-world-map.svg' %}"
+                alt="Grande carte du royaume d'Hyrule"
+                class="world-map-image"
+            >
+
+
+            <!-- =================================================
+                 MARQUEURS DJANGO
+            ================================================== -->
+
+            {% for location in locations %}
+
+            <a
+                href="{% url 'location_detail' location.id %}"
+                class="location-marker marker-{{ forloop.counter }}"
+                title="{{ location.name }}"
+            >
+
+                <span class="marker-pulse"></span>
+
+                <span class="marker-icon">
+
+                    <img
+                        src="{% static 'css/icons/sheikah-eye.svg' %}"
+                        alt=""
+                    >
+
+                </span>
+
+
+                <span class="marker-label">
+
+                    {{ location.name }}
+
+                </span>
+
+            </a>
+
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         LÉGENDE
+    ====================================================== -->
+
+    <div class="map-legend">
+
+
+        <div class="legend-item">
+
+            <img
+                src="{% static 'css/icons/sheikah-eye.svg' %}"
+                alt=""
+            >
+
+            <span>
+                Lieu d'Hyrule
+            </span>
+
+        </div>
+
+
+        <div class="legend-item">
+
+            <img
+                src="{% static 'css/icons/master-sword.svg' %}"
+                alt=""
+            >
+
+            <span>
+                Quêtes disponibles
+            </span>
+
+        </div>
+
+
+        <div class="legend-item">
+
+            <img
+                src="{% static 'css/icons/rupee.svg' %}"
+                alt=""
+            >
+
+            <span>
+                Récompenses
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         LISTE DES LIEUX
+    ====================================================== -->
+
+    <section class="locations-section">
+
+
+        <div class="section-heading">
+
+            <span class="section-eyebrow">
+                DESTINATIONS
+            </span>
+
+            <h2>
+                Régions d'Hyrule
+            </h2>
+
+            <p>
+                Sélectionnez une destination pour consulter
+                les aventures disponibles.
+            </p>
+
+        </div>
+
+
+
+        <div class="locations-grid">
+
+
+            {% for location in locations %}
+
+
+            <a
+                href="{% url 'location_detail' location.id %}"
+                class="location-card"
+            >
+
+
+                <div class="location-card-icon">
+
+                    <img
+                        src="{% static 'css/icons/sheikah-eye.svg' %}"
+                        alt=""
+                    >
+
+                </div>
+
+
+                <div class="location-card-content">
+
+                    <span class="location-card-region">
+
+                        RÉGION
+
+                    </span>
+
+
+                    <h3>
+
+                        {{ location.name }}
+
+                    </h3>
+
+
+                    <p>
+
+                        {{ location.region }}
+
+                    </p>
+
+                </div>
+
+
+                <span class="location-card-arrow">
+                    →
+                </span>
+
+
+            </a>
+
+
+            {% empty %}
+
+
+            <div class="empty-location">
+
+                <img
+                    src="{% static 'css/icons/fairy.svg' %}"
+                    alt=""
+                >
+
+                <h3>
+                    Aucun lieu découvert
+                </h3>
+
+                <p>
+                    Les régions d'Hyrule seront bientôt disponibles.
+                </p>
+
+            </div>
+
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+</section>
+
+{% endblock %}
