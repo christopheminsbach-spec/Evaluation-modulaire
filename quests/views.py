@@ -5,6 +5,39 @@ from django.http import JsonResponse
 
 from .models import Location, Quest
 
+from .services.chatbot_service import ask_ollama
+from .services.spellcheck_service import correct_text
+
+
+
+def chatbot(request):
+
+    if request.method == "POST":
+
+        message = request.POST.get(
+            "message"
+        )
+
+
+        # Correction automatique
+        corrected = correct_text(
+            message
+        )
+
+
+        # Envoi Ollama
+        response = ask_ollama(
+            corrected
+        )
+
+
+        return JsonResponse(
+            {
+                "question": corrected,
+                "answer": response
+            }
+        )
+
 
 # ==========================================
 # PAGE D'ACCUEIL
