@@ -3,34 +3,28 @@ from django.contrib import admin
 from .models import Location, Quest
 
 
-
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
 
     list_display = (
         "name",
-        "region"
+        "region",
+        "character",
     )
-
 
 
 @admin.register(Quest)
 class QuestAdmin(admin.ModelAdmin):
 
     list_display = (
-
         "title",
         "difficulty",
         "reward",
         "completed",
-        "location"
-
+        "location",
     )
 
-
     list_filter = (
-
         "completed",
-        "difficulty"
-
+        "difficulty",
     )

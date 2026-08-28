@@ -1,0 +1,165 @@
+/* =========================================
+   PERSONNAGES DES REGIONS
+========================================= */
+
+
+.region-character {
+
+    position: absolute;
+
+    width: 70px;
+    height: 70px;
+
+    bottom: 20px;
+    right: 20px;
+
+    object-fit: contain;
+
+    animation:
+        characterFloat 3s ease-in-out infinite;
+
+    z-index: 5;
+}
+
+
+/* flottement du personnage */
+
+@keyframes characterFloat {
+
+    0% {
+        transform: translateY(0);
+    }
+
+
+    50% {
+        transform: translateY(-8px);
+    }
+
+
+    100% {
+        transform: translateY(0);
+    }
+
+}
+
+
+
+/* =========================================
+   PERSONNAGE QUI MARCHE
+========================================= */
+
+
+.character-walk {
+
+
+    width:48px;
+
+    height:48px;
+
+
+    background-repeat:no-repeat;
+
+
+    animation:
+
+        walkAnimation
+        0.8s
+        steps(4)
+        infinite;
+
+}
+
+
+
+/*
+Sprite sheet 4 images
+*/
+
+@keyframes walkAnimation {
+
+
+    from {
+
+        background-position:0;
+
+    }
+
+
+    to {
+
+        background-position:-192px;
+
+    }
+
+}
+
+/* =====================================
+   PERSONNAGE REGION DETAIL
+===================================== */
+
+
+.location-character-container {
+
+    width:120px;
+    height:120px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+
+.region-character {
+
+
+    width:90px;
+
+    height:90px;
+
+
+    object-fit:contain;
+
+
+    animation:
+
+    characterFloat
+
+    3s
+
+    ease-in-out
+
+    infinite;
+
+}
+
+
+
+/* Animation flottement */
+
+@keyframes characterFloat {
+
+
+    0% {
+
+        transform:translateY(0);
+
+    }
+
+
+    50% {
+
+        transform:translateY(-10px);
+
+    }
+
+
+    100% {
+
+        transform:translateY(0);
+
+    }
+
+}

@@ -1,384 +1,198 @@
-{% extends "base.html" %}
-{% load static %}
-
-
-{% block title %}
-    {{ location.name }} | Hyrule Quest Board
-{% endblock %}
-
-
-{% block content %}
+{% extends "base.html" %} {% load static %} {% block title %} {{ location.name
+}} | Hyrule Quest Board {% endblock %} {% block content %}
 
 <section class="location-detail-page">
-
-
-    <!-- =====================================================
+  <!-- =====================================================
          RETOUR
     ====================================================== -->
 
-    <a
-        href="{% url 'location_list' %}"
-        class="back-link"
-    >
+  <a href="{% url 'location_list' %}" class="back-link">
+    <span class="back-link-icon"> ← </span>
 
-        <span class="back-link-icon">
-            ←
-        </span>
+    <span> Retour à la carte </span>
+  </a>
 
-        <span>
-            Retour à la carte
-        </span>
-
-    </a>
-
-
-
-    <!-- =====================================================
+  <!-- =====================================================
          EN-TÊTE
     ====================================================== -->
 
-    <div class="location-detail-header">
-
-
-        <div class="location-detail-symbol">
-
-            <img
-                src="{% static 'css/icons/sheikah-eye.svg' %}"
-                alt=""
-            >
-
-        </div>
-
-
-        <div>
-
-            <span class="section-eyebrow">
-                RÉGION D'HYRULE
-            </span>
-
-
-            <h1 class="hyrule-title">
-
-                {{ location.name }}
-
-            </h1>
-
-
-            <div class="location-region">
-
-                <img
-                    src="{% static 'css/icons/triforce.svg' %}"
-                    alt=""
-                >
-
-                <span>
-
-                    Région :
-
-                    <strong>
-                        {{ location.region }}
-                    </strong>
-
-                </span>
-
-            </div>
-
-        </div>
-
+  <div class="location-detail-header">
+    <div class="location-detail-symbol">
+      <img src="{% static 'css/icons/sheikah-eye.svg' %}" alt="" />
     </div>
 
+    <div class="location-character-container">
+      <img
+        src="{% static 'character/' %}{{ location.character }}"
+        class="region-character"
+        alt="{{ location.name }}"
+      />
+    </div>
 
+    <div>
+      <span class="section-eyebrow"> RÉGION D'HYRULE </span>
 
-    <!-- =====================================================
+      <h1 class="hyrule-title">{{ location.name }}</h1>
+
+      <div class="location-region">
+        <img src="{% static 'css/icons/triforce.svg' %}" alt="" />
+
+        <span>
+          Région :
+
+          <strong> {{ location.region }} </strong>
+        </span>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- =====================================================
          GRANDE CARTE
     ====================================================== -->
 
-    <div class="detail-map-container">
+  <div class="detail-map">
+    <img
+      src="{% static 'images/hyrule-world-map.svg' %}"
+      alt="Carte d'Hyrule"
+      class="detail-map-image"
+    />
 
+    <!-- PERSONNAGE REGION -->
 
-        <div class="detail-map">
-
-
-            <img
-                src="{% static 'images/hyrule-world-map.svg' %}"
-                alt="Carte d'Hyrule"
-                class="detail-map-image"
-            >
-
-
-            <!-- MARQUEUR DU LIEU -->
-
-            <div class="current-location-marker">
-
-                <span class="current-marker-ring"></span>
-
-                <img
-                    src="{% static 'css/icons/sheikah-eye.svg' %}"
-                    alt=""
-                >
-
-            </div>
-
-
-        </div>
-
+    <div class="region-character">
+      <img
+        src="{% static 'character/' %}{{ location.character }}"
+        class="walking-character"
+        alt="Personnage de {{ location.name }}"
+      />
     </div>
 
+    <!-- MARQUEUR DU LIEU -->
 
+    <div class="current-location-marker">
+      <img src="{% static 'css/icons/sheikah-eye.svg' %}" alt="" />
+    </div>
+  </div>
 
-    <!-- =====================================================
+  <!-- =====================================================
          QUÊTES DISPONIBLES
     ====================================================== -->
 
-    <section class="location-quests">
+  <section class="location-quests">
+    <div class="section-heading-left">
+      <div class="section-heading-icon">
+        <img src="{% static 'css/icons/master-sword.svg' %}" alt="" />
+      </div>
 
+      <div>
+        <span class="section-eyebrow"> MISSIONS ACTIVES </span>
 
-        <div class="section-heading-left">
+        <h2>Quêtes disponibles</h2>
+      </div>
+    </div>
 
+    <div class="mini-quest-list">
+      {% for quest in available_quests %}
 
-            <div class="section-heading-icon">
-
-                <img
-                    src="{% static 'css/icons/master-sword.svg' %}"
-                    alt=""
-                >
-
-            </div>
-
-
-            <div>
-
-                <span class="section-eyebrow">
-                    MISSIONS ACTIVES
-                </span>
-
-                <h2>
-                    Quêtes disponibles
-                </h2>
-
-            </div>
-
+      <a href="{% url 'quest_detail' quest.id %}" class="mini-quest-card">
+        <div class="mini-quest-icon">
+          <img src="{% static 'css/icons/master-sword.svg' %}" alt="" />
         </div>
 
+        <div class="mini-quest-content">
+          <span class="status status-available"> Disponible </span>
 
+          <h3>{{ quest.title }}</h3>
 
-        <div class="mini-quest-list">
+          <p>
+            {{ quest.difficulty }}
 
+            <span class="quest-separator"> · </span>
 
-            {% for quest in available_quests %}
+            <span class="reward-inline">
+              <img src="{% static 'css/icons/rupee.svg' %}" alt="" />
 
-
-            <a
-                href="{% url 'quest_detail' quest.id %}"
-                class="mini-quest-card"
-            >
-
-
-                <div class="mini-quest-icon">
-
-                    <img
-                        src="{% static 'css/icons/master-sword.svg' %}"
-                        alt=""
-                    >
-
-                </div>
-
-
-                <div class="mini-quest-content">
-
-
-                    <span class="status status-available">
-                        Disponible
-                    </span>
-
-
-                    <h3>
-                        {{ quest.title }}
-                    </h3>
-
-
-                    <p>
-
-                        {{ quest.difficulty }}
-
-                        <span class="quest-separator">
-                            ·
-                        </span>
-
-                        <span class="reward-inline">
-
-                            <img
-                                src="{% static 'css/icons/rupee.svg' %}"
-                                alt=""
-                            >
-
-                            {{ quest.reward }} rubis
-
-                        </span>
-
-                    </p>
-
-                </div>
-
-
-                <span class="arrow">
-                    →
-                </span>
-
-
-            </a>
-
-
-            {% empty %}
-
-
-            <div class="empty-small">
-
-                <img
-                    src="{% static 'css/icons/fairy.svg' %}"
-                    alt=""
-                >
-
-                <p>
-                    Aucune quête disponible dans ce lieu.
-                </p>
-
-            </div>
-
-
-            {% endfor %}
-
+              {{ quest.reward }} rubis
+            </span>
+          </p>
         </div>
 
-    </section>
+        <span class="arrow"> → </span>
+      </a>
 
+      {% empty %}
 
+      <div class="empty-small">
+        <img src="{% static 'css/icons/fairy.svg' %}" alt="" />
 
-    <!-- =====================================================
+        <p>Aucune quête disponible dans ce lieu.</p>
+      </div>
+
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- =====================================================
          QUÊTES TERMINÉES
     ====================================================== -->
 
-    <section class="location-quests completed-section">
+  <section class="location-quests completed-section">
+    <div class="section-heading-left">
+      <div class="section-heading-icon">
+        <img src="{% static 'css/icons/hylian-shield.svg' %}" alt="" />
+      </div>
 
+      <div>
+        <span class="section-eyebrow"> ARCHIVES </span>
 
-        <div class="section-heading-left">
+        <h2>Quêtes terminées</h2>
+      </div>
+    </div>
 
+    <div class="mini-quest-list">
+      {% for quest in completed_quests %}
 
-            <div class="section-heading-icon">
-
-                <img
-                    src="{% static 'css/icons/hylian-shield.svg' %}"
-                    alt=""
-                >
-
-            </div>
-
-
-            <div>
-
-                <span class="section-eyebrow">
-                    ARCHIVES
-                </span>
-
-                <h2>
-                    Quêtes terminées
-                </h2>
-
-            </div>
-
+      <a
+        href="{% url 'quest_detail' quest.id %}"
+        class="mini-quest-card completed-mini"
+      >
+        <div class="mini-quest-icon">
+          <img src="{% static 'css/icons/hylian-shield.svg' %}" alt="" />
         </div>
 
+        <div class="mini-quest-content">
+          <span class="status status-completed"> Terminée </span>
 
-        <div class="mini-quest-list">
+          <h3>{{ quest.title }}</h3>
 
+          <p>
+            {{ quest.difficulty }}
 
-            {% for quest in completed_quests %}
+            <span class="quest-separator"> · </span>
 
+            <span class="reward-inline">
+              <img src="{% static 'css/icons/rupee.svg' %}" alt="" />
 
-            <a
-                href="{% url 'quest_detail' quest.id %}"
-                class="mini-quest-card completed-mini"
-            >
-
-
-                <div class="mini-quest-icon">
-
-                    <img
-                        src="{% static 'css/icons/hylian-shield.svg' %}"
-                        alt=""
-                    >
-
-                </div>
-
-
-                <div class="mini-quest-content">
-
-                    <span class="status status-completed">
-                        Terminée
-                    </span>
-
-
-                    <h3>
-                        {{ quest.title }}
-                    </h3>
-
-
-                    <p>
-
-                        {{ quest.difficulty }}
-
-                        <span class="quest-separator">
-                            ·
-                        </span>
-
-                        <span class="reward-inline">
-
-                            <img
-                                src="{% static 'css/icons/rupee.svg' %}"
-                                alt=""
-                            >
-
-                            {{ quest.reward }} rubis
-
-                        </span>
-
-                    </p>
-
-                </div>
-
-
-                <span class="arrow">
-                    →
-                </span>
-
-
-            </a>
-
-
-            {% empty %}
-
-
-            <div class="empty-small">
-
-                <img
-                    src="{% static 'css/icons/fairy.svg' %}"
-                    alt=""
-                >
-
-                <p>
-                    Aucune quête terminée dans ce lieu.
-                </p>
-
-            </div>
-
-
-            {% endfor %}
-
+              {{ quest.reward }} rubis
+            </span>
+          </p>
         </div>
 
-    </section>
+        <span class="arrow"> → </span>
+      </a>
 
+      {% empty %}
 
+      <div class="empty-small">
+        <img src="{% static 'css/icons/fairy.svg' %}" alt="" />
+
+        <p>Aucune quête terminée dans ce lieu.</p>
+      </div>
+
+      {% endfor %}
+    </div>
+  </section>
 </section>
 
 {% endblock %}

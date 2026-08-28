@@ -15,6 +15,12 @@ class Location(models.Model):
         max_length=100
     )
 
+    character = models.CharField(
+        max_length=100,
+        default="villager.png"
+    )
+
+
     def __str__(self):
         return self.name
 
@@ -23,13 +29,13 @@ class Location(models.Model):
 # QUÊTE
 # ==========================================
 
-class Quest(models.Model):
+DIFFICULTY = (
+    ("easy", "Facile"),
+    ("medium", "Moyenne"),
+    ("hard", "Difficile"),
+)
 
-    DIFFICULTY = (
-        ("Facile", "Facile"),
-        ("Moyenne", "Moyenne"),
-        ("Difficile", "Difficile"),
-    )
+class Quest(models.Model):
 
     title = models.CharField(
         max_length=150
@@ -53,6 +59,7 @@ class Quest(models.Model):
         on_delete=models.CASCADE,
         related_name="quests"
     )
+
 
     def __str__(self):
         return self.title

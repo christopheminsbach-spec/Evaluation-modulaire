@@ -12,20 +12,16 @@ from .models import Location, Quest
 
 def home(request):
 
-    # Nombre total de quêtes
     total = Quest.objects.count()
 
-    # Quêtes encore disponibles
     available = Quest.objects.filter(
         completed=False
     ).count()
 
-    # Quêtes terminées
     completed = Quest.objects.filter(
         completed=True
     ).count()
 
-    # Total des récompenses
     total_rewards = sum(
         Quest.objects.values_list(
             "reward",
@@ -53,23 +49,18 @@ def home(request):
 
 def quest_list(request):
 
-    # Récupération des quêtes
-    # select_related évite des requêtes SQL inutiles
     quests = Quest.objects.select_related(
         "location"
     ).all()
 
-    # Récupération du filtre dans l'URL
     status = request.GET.get("status")
 
-    # Filtre : disponibles
     if status == "available":
 
         quests = quests.filter(
             completed=False
         )
 
-    # Filtre : terminées
     elif status == "completed":
 
         quests = quests.filter(
@@ -82,10 +73,12 @@ def quest_list(request):
     }
 
     return render(
-        request,
-        "quests/quest_list.html",
-        context
-    )
+    request,
+    "quests/quest_list.html",
+    {
+        "quests": quests
+    }
+)
 
 
 # ==========================================
@@ -157,13 +150,18 @@ def location_detail(request, id):
             "completed_quests": completed_quests,
         }
     )
+
+
 # ==========================================
 # CHATBOT ZELDA
 # ==========================================
 
 def chat(request):
 
-    # Affichage initial de la page
+    # --------------------------------------
+    # AFFICHAGE DE LA PAGE
+    # --------------------------------------
+
     if request.method == "GET":
 
         return render(
@@ -171,7 +169,10 @@ def chat(request):
             "quests/chat.html"
         )
 
-    # Vérification de la méthode HTTP
+    # --------------------------------------
+    # VÉRIFICATION DE LA MÉTHODE
+    # --------------------------------------
+
     if request.method != "POST":
 
         return JsonResponse(
@@ -181,13 +182,15 @@ def chat(request):
             status=405
         )
 
-    # Récupération du message envoyé
+    # --------------------------------------
+    # RÉCUPÉRATION DU MESSAGE
+    # --------------------------------------
+
     message = request.POST.get(
         "message",
         ""
     ).strip()
 
-    # Vérification du message
     if not message:
 
         return JsonResponse(
@@ -198,18 +201,24 @@ def chat(request):
         )
 
     # ======================================
-    # CONSIGNE SYSTÈME
+    # PROMPT SYSTÈME
     # ======================================
 
     system_prompt = """
 Tu es Hyrule Guide, un assistant spécialisé
-exclusivement dans l'univers de The Legend of Zelda.
+dans l'univers de The Legend of Zelda.
 
-Ta mission est de répondre aux questions concernant :
+Tu réponds uniquement aux questions concernant
+l'univers Zelda.
 
-- les jeux The Legend of Zelda
+Tu peux parler de :
+
+- Link
+- Zelda
+- Ganondorf
+- Hyrule
+- les jeux Zelda
 - les personnages
-- les lieux
 - les peuples
 - les créatures
 - les objets
@@ -217,56 +226,54 @@ Ta mission est de répondre aux questions concernant :
 - les donjons
 - les sanctuaires
 - les quêtes
+- les lieux
 - la chronologie
 - la mythologie
-- l'histoire de l'univers Zelda
+- l'histoire de Zelda
 
-Règles obligatoires :
+RÈGLES :
 
-1. Tu dois rester dans l'univers de Zelda.
+1. Réponds toujours en français.
 
-2. Si l'utilisateur pose une question sans rapport
-avec Zelda, réponds poliment que tu es uniquement
-un assistant spécialisé dans l'univers de Zelda.
+2. Reste dans l'univers de Zelda.
 
-3. Ne réponds pas aux demandes concernant :
-   - la programmation
-   - Django
-   - Python
-   - les mathématiques
-   - la politique
-   - l'actualité
-   - les conseils médicaux
-   - les conseils juridiques
-   - les autres jeux vidéo sans rapport avec Zelda
+3. Si la question n'a aucun rapport avec Zelda,
+indique simplement que tu es spécialisé dans
+l'univers de Zelda.
 
-4. Ne prétends pas être un personnage officiel de Zelda.
+4. Ne réponds pas aux questions concernant :
+programmation, Django, Python, politique,
+actualité, médecine, droit ou autres jeux vidéo.
 
-5. Si une information est incertaine ou varie selon
-les jeux, précise-le.
+5. Ne prétends jamais être un personnage officiel
+de Zelda.
 
-6. Réponds en français.
+6. Si une information varie selon les jeux,
+explique-le clairement.
 
-7. Sois clair, sympathique et relativement concis.
+7. Donne des réponses courtes et faciles à comprendre.
 
-8. Tu peux utiliser des emojis liés à Zelda lorsque
-cela améliore la réponse.
+8. Ne fais pas de longue réflexion visible.
+
+9. Ne répète pas la question de l'utilisateur.
+
+10. Réponds directement à la question.
 
 Tu es le guide des aventuriers d'Hyrule.
 """
 
     # ======================================
-    # PROMPT ENVOYÉ À OLLAMA
+    # PROMPT
     # ======================================
 
     prompt = f"""
 {system_prompt}
 
-Question de l'utilisateur :
+Question :
 
 {message}
 
-Réponds maintenant en français.
+Réponse :
 """
 
     # ======================================
@@ -280,9 +287,14 @@ Réponds maintenant en français.
             "http://localhost:11434/api/generate",
 
             json={
-                "model": "llama3.2:3b",
+                "model": "gemma3:1b",
                 "prompt": prompt,
-                "stream": False
+                "stream": False,
+
+                "options": {
+                    "temperature": 0.4,
+                    "num_predict": 150
+                }
             },
 
             timeout=120
@@ -311,8 +323,17 @@ Réponds maintenant en français.
             status=504
         )
 
+    except requests.exceptions.RequestException as e:
+
+        return JsonResponse(
+            {
+                "error": f"Erreur de connexion à Ollama : {str(e)}"
+            },
+            status=500
+        )
+
     # ======================================
-    # ERREUR OLLAMA
+    # VÉRIFICATION DE LA RÉPONSE HTTP
     # ======================================
 
     if response.status_code != 200:
@@ -328,24 +349,67 @@ Réponds maintenant en français.
         )
 
     # ======================================
-    # RÉCUPÉRATION DE LA RÉPONSE
+    # CONVERSION JSON
     # ======================================
 
-    data = response.json()
+    try:
+
+        data = response.json()
+
+    except ValueError:
+
+        return JsonResponse(
+            {
+                "error": (
+                    "Ollama a retourné une réponse "
+                    "qui n'est pas du JSON."
+                )
+            },
+            status=500
+        )
+
+    # ======================================
+    # DEBUG
+    # ======================================
+
+    print("\n========== OLLAMA ==========")
+    print("Modèle :", data.get("model"))
+    print("Réponse :", data.get("response"))
+    print("Done :", data.get("done"))
+    print("============================\n")
+
+    # ======================================
+    # RÉCUPÉRATION DE LA RÉPONSE
+    # ======================================
 
     answer = data.get(
         "response",
         ""
-    ).strip()
+    )
+
+    if answer is None:
+        answer = ""
+
+    answer = answer.strip()
+
+    # ======================================
+    # AUCUNE RÉPONSE
+    # ======================================
 
     if not answer:
 
         return JsonResponse(
             {
-                "error": "Ollama n'a fourni aucune réponse."
+                "error": (
+                    "Ollama n'a fourni aucune réponse."
+                )
             },
             status=500
         )
+
+    # ======================================
+    # RÉPONSE AU FRONTEND
+    # ======================================
 
     return JsonResponse(
         {
