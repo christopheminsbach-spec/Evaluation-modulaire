@@ -1,42 +1,30 @@
+import json
+
 import requests
 
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 from .models import Location, Quest
 
-from .services.chatbot_service import ask_ollama
-from .services.spellcheck_service import correct_text
 
+def correct_text(text):
+    """Corrige le texte en français si LanguageTool est disponible."""
+    try:
+        import language_tool_python
 
-
-def chatbot(request):
-
-    if request.method == "POST":
-
-        message = request.POST.get(
-            "message"
+        tool = language_tool_python.LanguageTool("fr")
+        corrected = language_tool_python.utils.correct(
+            text,
+            tool.check(text)
         )
+        tool.close()
+        return corrected
+    except (ImportError, Exception):
+        return text
 
 
-        # Correction automatique
-        corrected = correct_text(
-            message
-        )
-
-
-        # Envoi Ollama
-        response = ask_ollama(
-            corrected
-        )
-
-
-        return JsonResponse(
-            {
-                "question": corrected,
-                "answer": response
-            }
-        )
 
 
 # ==========================================
@@ -191,127 +179,74 @@ def location_detail(request, id):
 
 def chat(request):
 
-    # --------------------------------------
-    # AFFICHAGE DE LA PAGE
-    # --------------------------------------
+    return render(
+        request,
+        "quests/chat.html"
+    )
 
-    if request.method == "GET":
+from django.views.decorators.http import require_POST
+import json
 
-        return render(
-            request,
-            "quests/chat.html"
+from .services.spellcheck_service import correct_text
+
+
+@require_POST
+def chat_api(request):
+
+    try:
+
+        data = json.loads(
+            request.body
         )
 
-    # --------------------------------------
-    # VÉRIFICATION DE LA MÉTHODE
-    # --------------------------------------
-
-    if request.method != "POST":
+    except json.JSONDecodeError:
 
         return JsonResponse(
             {
-                "error": "Méthode non autorisée."
+                "error": "JSON invalide"
             },
-            status=405
+            status=400
         )
 
-    # --------------------------------------
-    # RÉCUPÉRATION DU MESSAGE
-    # --------------------------------------
 
-    message = request.POST.get(
+    message = data.get(
         "message",
         ""
     ).strip()
+
+
 
     if not message:
 
         return JsonResponse(
             {
-                "error": "Veuillez écrire une question."
+                "error": "Message vide"
             },
             status=400
         )
 
-    # ======================================
-    # PROMPT SYSTÈME
-    # ======================================
 
-    system_prompt = """
-Tu es Hyrule Guide, un assistant spécialisé
-dans l'univers de The Legend of Zelda.
 
-Tu réponds uniquement aux questions concernant
-l'univers Zelda.
+    corrected = correct_text(
+        message
+    )
 
-Tu peux parler de :
-
-- Link
-- Zelda
-- Ganondorf
-- Hyrule
-- les jeux Zelda
-- les personnages
-- les peuples
-- les créatures
-- les objets
-- les armes
-- les donjons
-- les sanctuaires
-- les quêtes
-- les lieux
-- la chronologie
-- la mythologie
-- l'histoire de Zelda
-
-RÈGLES :
-
-1. Réponds toujours en français.
-
-2. Reste dans l'univers de Zelda.
-
-3. Si la question n'a aucun rapport avec Zelda,
-indique simplement que tu es spécialisé dans
-l'univers de Zelda.
-
-4. Ne réponds pas aux questions concernant :
-programmation, Django, Python, politique,
-actualité, médecine, droit ou autres jeux vidéo.
-
-5. Ne prétends jamais être un personnage officiel
-de Zelda.
-
-6. Si une information varie selon les jeux,
-explique-le clairement.
-
-7. Donne des réponses courtes et faciles à comprendre.
-
-8. Ne fais pas de longue réflexion visible.
-
-9. Ne répète pas la question de l'utilisateur.
-
-10. Réponds directement à la question.
-
-Tu es le guide des aventuriers d'Hyrule.
-"""
-
-    # ======================================
-    # PROMPT
-    # ======================================
 
     prompt = f"""
-{system_prompt}
+
+Tu es Hyrule Guide.
+
+Tu réponds uniquement
+dans l'univers de Zelda.
 
 Question :
 
-{message}
+{corrected}
 
 Réponse :
+
 """
 
-    # ======================================
-    # APPEL À OLLAMA
-    # ======================================
 
     try:
 
@@ -320,132 +255,194 @@ Réponse :
             "http://localhost:11434/api/generate",
 
             json={
-                "model": "gemma3:1b",
-                "prompt": prompt,
-                "stream": False,
 
-                "options": {
-                    "temperature": 0.4,
-                    "num_predict": 150
-                }
+                "model": "llama3.2:3b",
+
+                "prompt": prompt,
+
+                "stream": False
+
             },
 
             timeout=120
+
         )
 
-    except requests.exceptions.ConnectionError:
 
-        return JsonResponse(
-            {
-                "error": (
-                    "Impossible de contacter Ollama. "
-                    "Vérifiez qu'Ollama est lancé."
-                )
-            },
-            status=503
-        )
+        response.raise_for_status()
 
-    except requests.exceptions.Timeout:
-
-        return JsonResponse(
-            {
-                "error": (
-                    "Ollama met trop de temps à répondre."
-                )
-            },
-            status=504
-        )
 
     except requests.exceptions.RequestException as e:
 
         return JsonResponse(
             {
-                "error": f"Erreur de connexion à Ollama : {str(e)}"
+                "error": str(e)
             },
-            status=500
+            status=503
         )
 
+
+
+    result = response.json()
+
+
+    return JsonResponse(
+        {
+            "question_corrigee": corrected,
+            "answer": result.get(
+                "response",
+                ""
+            )
+        }
+    )
+
+
     # ======================================
-    # VÉRIFICATION DE LA RÉPONSE HTTP
+    # CORRECTION ORTHOGRAPHIQUE
     # ======================================
 
-    if response.status_code != 200:
+    corrected_message = correct_text(
+        message
+    )
 
-        return JsonResponse(
-            {
-                "error": (
-                    "Ollama a retourné une erreur : "
-                    f"{response.text}"
-                )
-            },
-            status=500
-        )
+
+
+    print(
+        "Question originale :",
+        message
+    )
+
+
+    print(
+        "Question corrigée :",
+        corrected_message
+    )
+
+
 
     # ======================================
-    # CONVERSION JSON
+    # PROMPT ZELDA
     # ======================================
+
+    system_prompt = """
+
+Tu es Hyrule Guide.
+
+Tu réponds uniquement
+dans l'univers de The Legend of Zelda.
+
+Tu es spécialisé dans :
+
+- Link
+- Zelda
+- Ganondorf
+- Hyrule
+- personnages
+- lieux
+- objets
+- créatures
+- histoire Zelda
+
+Réponds toujours en français.
+
+Si la question ne concerne pas Zelda,
+explique que tu es uniquement
+un guide d'Hyrule.
+
+Réponse courte et claire.
+
+"""
+
+
+
+    prompt = f"""
+
+{system_prompt}
+
+
+Question du joueur :
+
+{corrected_message}
+
+
+Réponse :
+
+"""
+
+
 
     try:
 
-        data = response.json()
+        response = requests.post(
 
-    except ValueError:
+            "http://localhost:11434/api/generate",
 
-        return JsonResponse(
-            {
-                "error": (
-                    "Ollama a retourné une réponse "
-                    "qui n'est pas du JSON."
-                )
+            json={
+
+                "model": "llama3.2:3b",
+
+                "prompt": prompt,
+
+                "stream": False,
+
+                "options": {
+
+                    "temperature":0.4,
+
+                    "num_predict":150
+
+                }
+
             },
-            status=500
+
+            timeout=120
+
         )
 
-    # ======================================
-    # DEBUG
-    # ======================================
 
-    print("\n========== OLLAMA ==========")
-    print("Modèle :", data.get("model"))
-    print("Réponse :", data.get("response"))
-    print("Done :", data.get("done"))
-    print("============================\n")
+        response.raise_for_status()
 
-    # ======================================
-    # RÉCUPÉRATION DE LA RÉPONSE
-    # ======================================
+
+    except requests.exceptions.RequestException as e:
+
+
+        return JsonResponse(
+
+            {
+                "error":
+                f"Erreur Ollama : {str(e)}"
+            },
+
+            status=503
+
+        )
+
+
+
+    data = response.json()
+
+
 
     answer = data.get(
         "response",
         ""
-    )
+    ).strip()
 
-    if answer is None:
-        answer = ""
 
-    answer = answer.strip()
-
-    # ======================================
-    # AUCUNE RÉPONSE
-    # ======================================
-
-    if not answer:
-
-        return JsonResponse(
-            {
-                "error": (
-                    "Ollama n'a fourni aucune réponse."
-                )
-            },
-            status=500
-        )
-
-    # ======================================
-    # RÉPONSE AU FRONTEND
-    # ======================================
 
     return JsonResponse(
+
         {
-            "answer": answer
+
+            "question_originale":
+                message,
+
+            "question_corrigee":
+                corrected_message,
+
+            "answer":
+                answer
+
         }
+
     )

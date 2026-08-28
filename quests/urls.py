@@ -1,5 +1,4 @@
 from django.urls import path
-
 from . import views
 
 
@@ -18,7 +17,7 @@ urlpatterns = [
     ),
 
     path(
-        "quest/<int:id>/",
+        "quests/<int:id>/",
         views.quest_detail,
         name="quest_detail"
     ),
@@ -30,16 +29,21 @@ urlpatterns = [
     ),
 
     path(
-        "location/<int:id>/",
+        "locations/<int:id>/",
         views.location_detail,
         name="location_detail"
     ),
 
-    # Chatbot Zelda
     path(
-        "chat/",
-        views.chat,
-        name="chat"
-    ),
+    "chat/",
+    views.chat,
+    name="chat"
+),
+
+path(
+    "chat/api/",
+    views.chat_api,
+    name="chat_api"
+),
 
 ]
