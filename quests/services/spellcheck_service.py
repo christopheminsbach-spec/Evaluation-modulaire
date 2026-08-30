@@ -1,16 +1,20 @@
 import language_tool_python
 
 
-tool = language_tool_python.LanguageTool("fr")
+tool = language_tool_python.LanguageTool(
+    "fr"
+)
 
 
 def correct_text(text):
 
-    corrections = tool.check(text)
+    matches = tool.check(text)
+
 
     corrected = language_tool_python.utils.correct(
         text,
-        corrections
+        matches
     )
+
 
     return corrected

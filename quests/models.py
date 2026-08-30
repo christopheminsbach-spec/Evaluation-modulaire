@@ -1,3 +1,4 @@
+
 from django.db import models
 
 
@@ -20,6 +21,19 @@ class Location(models.Model):
         default="villager.png"
     )
 
+    map_image = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
+    marker_x = models.FloatField(
+        default=50
+    )
+
+    marker_y = models.FloatField(
+        default=50
+    )
 
     def __str__(self):
         return self.name
@@ -34,6 +48,7 @@ DIFFICULTY = (
     ("medium", "Moyenne"),
     ("hard", "Difficile"),
 )
+
 
 class Quest(models.Model):
 
@@ -60,9 +75,6 @@ class Quest(models.Model):
         related_name="quests"
     )
 
-
     def __str__(self):
         return self.title
 
-
-    

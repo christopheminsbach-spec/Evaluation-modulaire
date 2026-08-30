@@ -1,0 +1,1189 @@
+
+/* ============================================================
+   HYRULE QUEST BOARD
+   LOCATION DETAIL
+   ============================================================ */
+
+
+/* ============================================================
+   VARIABLES
+   ============================================================ */
+
+.location-detail-page {
+  --hyrule-gold: #c8a951;
+  --hyrule-gold-light: #e6cf7a;
+  --hyrule-green: #2f5d50;
+  --hyrule-green-dark: #173d35;
+  --hyrule-green-light: #467a68;
+
+  --hyrule-paper: #f4efe2;
+  --hyrule-paper-light: #faf7ef;
+  --hyrule-paper-dark: #ded5c2;
+
+  --hyrule-ink: #26332f;
+  --hyrule-muted: #718078;
+
+  --hyrule-red: #9d493f;
+
+  --shadow-soft:
+    0 10px 30px rgba(30, 43, 37, 0.10);
+
+  --shadow-card:
+    0 8px 22px rgba(30, 43, 37, 0.12);
+
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 40px 0 80px;
+
+  color: var(--hyrule-ink);
+}
+
+
+/* ============================================================
+   RETOUR
+   ============================================================ */
+
+.location-detail-page .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 28px;
+
+  color: var(--hyrule-green);
+  text-decoration: none;
+
+  font-size: 0.95rem;
+  font-weight: 700;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.location-detail-page .back-link:hover {
+  color: var(--hyrule-gold);
+  transform: translateX(-4px);
+}
+
+.location-detail-page .back-link-icon {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid var(--hyrule-paper-dark);
+  border-radius: 50%;
+
+  background: var(--hyrule-paper-light);
+
+  font-size: 1.2rem;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+
+
+/* ============================================================
+   HEADER DE LA REGION
+   ============================================================ */
+
+.location-detail-page .location-detail-header {
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns:
+    80px
+    minmax(150px, 230px)
+    1fr;
+
+  align-items: center;
+
+  gap: 25px;
+
+  margin-bottom: 35px;
+
+  padding: 28px 32px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--hyrule-paper-light),
+      var(--hyrule-paper)
+    );
+
+  border: 1px solid var(--hyrule-paper-dark);
+  border-radius: 20px;
+
+  box-shadow: var(--shadow-soft);
+
+  overflow: hidden;
+}
+
+
+/* ligne décorative */
+
+.location-detail-page .location-detail-header::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 5px;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      to bottom,
+      var(--hyrule-gold),
+      var(--hyrule-green)
+    );
+}
+
+
+/* ============================================================
+   SYMBOLE SHEIKAH
+   ============================================================ */
+
+.location-detail-page .location-detail-symbol {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 68px;
+  height: 68px;
+
+  border: 1px solid var(--hyrule-gold);
+
+  border-radius: 16px;
+
+  background:
+    rgba(200, 169, 81, 0.08);
+
+  box-shadow:
+    inset 0 0 20px rgba(200, 169, 81, 0.06);
+}
+
+.location-detail-page .location-detail-symbol img {
+  width: 38px;
+  height: 38px;
+
+  object-fit: contain;
+}
+
+
+/* ============================================================
+   PERSONNAGE HEADER
+   ============================================================ */
+
+.location-detail-page .location-character-container {
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: center;
+
+  height: 150px;
+}
+
+.location-detail-page .region-character-image {
+  display: block;
+
+  max-width: 100%;
+  max-height: 150px;
+
+  width: auto;
+  height: auto;
+
+  object-fit: contain;
+
+  filter:
+    drop-shadow(
+      0 8px 6px rgba(0, 0, 0, 0.18)
+    );
+
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+.location-detail-page
+.location-detail-header:hover
+.region-character-image {
+  transform: translateY(-6px) scale(1.04);
+
+  filter:
+    drop-shadow(
+      0 12px 8px rgba(0, 0, 0, 0.20)
+    );
+}
+
+
+/* ============================================================
+   TEXTE HEADER
+   ============================================================ */
+
+.location-detail-page .location-header-content {
+  min-width: 0;
+}
+
+.location-detail-page .section-eyebrow {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: var(--hyrule-gold);
+
+  font-size: 0.72rem;
+  font-weight: 800;
+
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.location-detail-page .hyrule-title {
+  margin: 0 0 12px;
+
+  color: var(--hyrule-green-dark);
+
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.05;
+
+  font-weight: 800;
+
+  letter-spacing: -0.03em;
+}
+
+.location-detail-page .location-region {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  color: var(--hyrule-muted);
+
+  font-size: 0.95rem;
+}
+
+.location-detail-page .location-region img {
+  width: 20px;
+  height: 20px;
+
+  object-fit: contain;
+}
+
+.location-detail-page .location-region strong {
+  color: var(--hyrule-green);
+}
+
+
+/* ============================================================
+   GRANDE CARTE
+   ============================================================ */
+
+.location-detail-page .detail-map {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 500px;
+
+  margin-bottom: 60px;
+
+  padding: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #e7dfcc,
+      #f5f0e3
+    );
+
+  border: 1px solid var(--hyrule-paper-dark);
+
+  border-radius: 24px;
+
+  box-shadow:
+    0 15px 45px rgba(31, 48, 41, 0.15);
+
+  overflow: hidden;
+}
+
+
+/* cadre intérieur */
+
+.location-detail-page .detail-map::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 9px;
+
+  border: 1px solid
+    rgba(200, 169, 81, 0.45);
+
+  border-radius: 18px;
+
+  pointer-events: none;
+
+  z-index: 2;
+}
+
+
+/* ============================================================
+   IMAGE DE CARTE
+   ============================================================ */
+
+.location-detail-page .location-map {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  min-height: 460px;
+
+  max-height: 700px;
+
+  object-fit: cover;
+
+  object-position: center;
+
+  border-radius: 16px;
+
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.15);
+
+  transition:
+    transform 0.5s ease,
+    filter 0.5s ease;
+}
+
+
+/* léger effet au survol */
+
+.location-detail-page .detail-map:hover .location-map {
+  transform: scale(1.015);
+
+  filter: saturate(1.05);
+}
+
+
+/* ============================================================
+   CARTE ABSENTE
+   ============================================================ */
+
+.location-detail-page .map-empty {
+  min-height: 460px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 15px;
+
+  color: var(--hyrule-muted);
+
+  text-align: center;
+}
+
+.location-detail-page .map-empty img {
+  width: 70px;
+  height: 70px;
+
+  opacity: 0.45;
+}
+
+.location-detail-page .map-empty p {
+  margin: 0;
+
+  font-size: 1rem;
+}
+
+
+/* ============================================================
+   MARQUEUR SHEIKAH
+   ============================================================ */
+
+.location-detail-page .current-location-marker {
+  position: absolute;
+
+  top: var(--marker-y);
+  left: var(--marker-x);
+
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 58px;
+  height: 58px;
+
+  transform: translate(-50%, -50%);
+
+  border: 2px solid var(--hyrule-gold);
+  border-radius: 50%;
+
+  background: rgba(23, 61, 53, 0.9);
+
+  box-shadow:
+    0 0 0 7px rgba(200, 169, 81, 0.18),
+    0 8px 25px rgba(0, 0, 0, 0.25);
+
+  animation: location-marker-pulse 2.4s infinite;
+}
+
+.location-detail-page .current-location-marker img {
+  width: 30px;
+  height: 30px;
+
+  object-fit: contain;
+}
+
+/* ============================================================
+   ANIMATION MARQUEUR
+   ============================================================ */
+
+@keyframes location-marker-pulse {
+
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 7px rgba(200, 169, 81, 0.18),
+      0 8px 25px rgba(0, 0, 0, 0.25);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 15px rgba(200, 169, 81, 0.03),
+      0 8px 30px rgba(0, 0, 0, 0.30);
+  }
+}
+
+
+/* ============================================================
+   SECTIONS QUÊTES
+   ============================================================ */
+
+.location-detail-page .location-quests {
+  margin-bottom: 55px;
+}
+
+.location-detail-page .completed-section {
+  margin-top: 15px;
+}
+
+
+/* ============================================================
+   TITRE DE SECTION
+   ============================================================ */
+
+.location-detail-page .section-heading-left {
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  margin-bottom: 24px;
+}
+
+.location-detail-page .section-heading-icon {
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 52px;
+  height: 52px;
+
+  border: 1px solid var(--hyrule-gold);
+
+  border-radius: 14px;
+
+  background:
+    var(--hyrule-paper-light);
+}
+
+.location-detail-page .section-heading-icon img {
+  width: 29px;
+  height: 29px;
+
+  object-fit: contain;
+}
+
+.location-detail-page .section-heading-left h2 {
+  margin: 0;
+
+  color: var(--hyrule-green-dark);
+
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+
+/* ============================================================
+   LISTE DES QUÊTES
+   ============================================================ */
+
+.location-detail-page .mini-quest-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+
+/* ============================================================
+   CARTE QUÊTE
+   ============================================================ */
+
+.location-detail-page .mini-quest-card {
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns:
+    58px
+    1fr
+    30px;
+
+  align-items: center;
+
+  gap: 18px;
+
+  min-height: 88px;
+
+  padding: 15px 20px;
+
+  color: inherit;
+
+  text-decoration: none;
+
+  background:
+    var(--hyrule-paper-light);
+
+  border: 1px solid var(--hyrule-paper-dark);
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 4px 15px rgba(30, 43, 37, 0.06);
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease;
+}
+
+.location-detail-page .mini-quest-card:hover {
+  transform: translateX(6px);
+
+  border-color:
+    rgba(200, 169, 81, 0.75);
+
+  background:
+    #fffdf7;
+
+  box-shadow:
+    var(--shadow-card);
+}
+
+
+/* ============================================================
+   ICÔNE QUÊTE
+   ============================================================ */
+
+.location-detail-page .mini-quest-icon {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 52px;
+  height: 52px;
+
+  border-radius: 13px;
+
+  background:
+    rgba(47, 93, 80, 0.08);
+
+  border: 1px solid
+    rgba(47, 93, 80, 0.15);
+}
+
+.location-detail-page .mini-quest-icon img {
+  width: 29px;
+  height: 29px;
+
+  object-fit: contain;
+}
+
+
+/* ============================================================
+   CONTENU QUÊTE
+   ============================================================ */
+
+.location-detail-page .mini-quest-content {
+  min-width: 0;
+}
+
+.location-detail-page .mini-quest-content h3 {
+  margin: 5px 0 5px;
+
+  color: var(--hyrule-green-dark);
+
+  font-size: 1.05rem;
+
+  font-weight: 750;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+.location-detail-page .mini-quest-content p {
+  display: flex;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  margin: 0;
+
+  color: var(--hyrule-muted);
+
+  font-size: 0.86rem;
+}
+
+
+/* ============================================================
+   STATUT
+   ============================================================ */
+
+.location-detail-page .status {
+  display: inline-flex;
+
+  align-items: center;
+
+  width: fit-content;
+
+  padding: 4px 9px;
+
+  border-radius: 999px;
+
+  font-size: 0.68rem;
+
+  font-weight: 800;
+
+  letter-spacing: 0.05em;
+
+  text-transform: uppercase;
+}
+
+.location-detail-page .status-available {
+  color: var(--hyrule-green);
+
+  background:
+    rgba(47, 93, 80, 0.10);
+}
+
+.location-detail-page .status-completed {
+  color: #77705f;
+
+  background:
+    rgba(119, 112, 95, 0.12);
+}
+
+
+/* ============================================================
+   RECOMPENSE
+   ============================================================ */
+
+.location-detail-page .reward-inline {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  color: var(--hyrule-gold);
+
+  font-weight: 750;
+}
+
+.location-detail-page .reward-inline img {
+  width: 17px;
+  height: 17px;
+
+  object-fit: contain;
+}
+
+.location-detail-page .quest-separator {
+  color: var(--hyrule-paper-dark);
+}
+
+
+/* ============================================================
+   FLECHE
+   ============================================================ */
+
+.location-detail-page .arrow {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: var(--hyrule-gold);
+
+  font-size: 1.5rem;
+
+  transition:
+    transform 0.2s ease;
+}
+
+.location-detail-page .mini-quest-card:hover .arrow {
+  transform: translateX(5px);
+}
+
+
+/* ============================================================
+   QUÊTES TERMINÉES
+   ============================================================ */
+
+.location-detail-page .completed-mini {
+  opacity: 0.78;
+}
+
+.location-detail-page .completed-mini:hover {
+  opacity: 1;
+}
+
+.location-detail-page .completed-mini
+.mini-quest-icon {
+  background:
+    rgba(119, 112, 95, 0.08);
+}
+
+
+/* ============================================================
+   AUCUNE QUÊTE
+   ============================================================ */
+
+.location-detail-page .empty-small {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 14px;
+
+  min-height: 100px;
+
+  padding: 25px;
+
+  color: var(--hyrule-muted);
+
+  background:
+    var(--hyrule-paper-light);
+
+  border: 1px dashed
+    var(--hyrule-paper-dark);
+
+  border-radius: 15px;
+
+  text-align: center;
+}
+
+.location-detail-page .empty-small img {
+  width: 32px;
+  height: 32px;
+
+  opacity: 0.65;
+}
+
+.location-detail-page .empty-small p {
+  margin: 0;
+
+  font-size: 0.92rem;
+}
+
+
+/* ============================================================
+   RESPONSIVE — TABLETTE
+   ============================================================ */
+
+@media (max-width: 850px) {
+
+  .location-detail-page {
+    width: min(
+      100% - 28px,
+      720px
+    );
+
+    padding-top: 28px;
+  }
+
+
+  .location-detail-page
+  .location-detail-header {
+
+    grid-template-columns:
+      65px
+      150px
+      1fr;
+
+    gap: 18px;
+
+    padding: 24px;
+  }
+
+
+  .location-detail-page
+  .location-character-container {
+
+    height: 125px;
+  }
+
+
+  .location-detail-page
+  .region-character-image {
+
+    max-height: 125px;
+  }
+
+
+  .location-detail-page
+  .detail-map {
+
+    min-height: 400px;
+
+    padding: 13px;
+
+    border-radius: 19px;
+  }
+
+
+  .location-detail-page
+  .location-map {
+
+    min-height: 380px;
+
+    max-height: 600px;
+  }
+
+}
+
+
+/* ============================================================
+   RESPONSIVE — MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+  .location-detail-page {
+
+    width: calc(100% - 22px);
+
+    padding:
+      22px
+      0
+      50px;
+  }
+
+
+  /* HEADER */
+
+  .location-detail-page
+  .location-detail-header {
+
+    grid-template-columns: 1fr;
+
+    text-align: center;
+
+    gap: 14px;
+
+    padding: 25px 18px;
+
+    border-radius: 17px;
+  }
+
+
+  .location-detail-page
+  .location-detail-symbol {
+
+    width: 55px;
+    height: 55px;
+
+    margin: 0 auto;
+  }
+
+
+  .location-detail-page
+  .location-detail-symbol img {
+
+    width: 31px;
+    height: 31px;
+  }
+
+
+  .location-detail-page
+  .location-character-container {
+
+    height: 125px;
+
+    order: 2;
+  }
+
+
+  .location-detail-page
+  .location-header-content {
+
+    order: 3;
+  }
+
+
+  .location-detail-page
+  .hyrule-title {
+
+    font-size: 2rem;
+  }
+
+
+  .location-detail-page
+  .location-region {
+
+    justify-content: center;
+  }
+
+
+  /* CARTE */
+
+  .location-detail-page
+  .detail-map {
+
+    min-height: 280px;
+
+    margin-bottom: 40px;
+
+    padding: 9px;
+
+    border-radius: 16px;
+  }
+
+
+  .location-detail-page
+  .detail-map::before {
+
+    inset: 6px;
+
+    border-radius: 12px;
+  }
+
+
+  .location-detail-page
+  .location-map {
+
+    min-height: 270px;
+
+    max-height: 450px;
+
+    border-radius: 11px;
+
+    object-fit: cover;
+  }
+
+
+  .location-detail-page
+  .current-location-marker {
+
+    width: 46px;
+    height: 46px;
+  }
+
+
+  .location-detail-page
+  .current-location-marker img {
+
+    width: 24px;
+    height: 24px;
+  }
+
+
+  /* TITRES */
+
+  .location-detail-page
+  .section-heading-left {
+
+    gap: 12px;
+
+    margin-bottom: 17px;
+  }
+
+
+  .location-detail-page
+  .section-heading-icon {
+
+    width: 44px;
+    height: 44px;
+
+    border-radius: 11px;
+  }
+
+
+  .location-detail-page
+  .section-heading-icon img {
+
+    width: 24px;
+    height: 24px;
+  }
+
+
+  .location-detail-page
+  .section-heading-left h2 {
+
+    font-size: 1.35rem;
+  }
+
+
+  /* QUEST */
+
+  .location-detail-page
+  .mini-quest-card {
+
+    grid-template-columns:
+      44px
+      1fr
+      22px;
+
+    gap: 11px;
+
+    min-height: 76px;
+
+    padding: 12px;
+  }
+
+
+  .location-detail-page
+  .mini-quest-icon {
+
+    width: 42px;
+    height: 42px;
+
+    border-radius: 10px;
+  }
+
+
+  .location-detail-page
+  .mini-quest-icon img {
+
+    width: 23px;
+    height: 23px;
+  }
+
+
+  .location-detail-page
+  .mini-quest-content h3 {
+
+    font-size: 0.93rem;
+  }
+
+
+  .location-detail-page
+  .mini-quest-content p {
+
+    font-size: 0.78rem;
+  }
+
+
+  .location-detail-page
+  .arrow {
+
+    font-size: 1.2rem;
+  }
+
+}
+
+
+/* ============================================================
+   PETITS ÉCRANS
+   ============================================================ */
+
+@media (max-width: 380px) {
+
+  .location-detail-page
+  .mini-quest-card {
+
+    grid-template-columns:
+      38px
+      1fr
+      18px;
+
+    gap: 8px;
+
+    padding: 10px;
+  }
+
+
+  .location-detail-page
+  .mini-quest-icon {
+
+    width: 37px;
+    height: 37px;
+  }
+
+
+  .location-detail-page
+  .status {
+
+    font-size: 0.60rem;
+  }
+
+
+  .location-detail-page
+  .mini-quest-content h3 {
+
+    font-size: 0.86rem;
+  }
+
+}
+
+
+/* ============================================================
+   ACCESSIBILITE
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .location-detail-page *,
+  .location-detail-page *::before,
+  .location-detail-page *::after {
+
+    animation-duration: 0.01ms !important;
+
+    animation-iteration-count: 1 !important;
+
+    scroll-behavior: auto !important;
+
+    transition-duration: 0.01ms !important;
+  }
+
+}
+

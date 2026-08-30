@@ -3,33 +3,35 @@
 
 <section class="location-detail-page">
   <!-- =====================================================
-         RETOUR
-    ====================================================== -->
+       RETOUR
+  ====================================================== -->
 
   <a href="{% url 'location_list' %}" class="back-link">
-    <span class="back-link-icon"> ← </span>
-
-    <span> Retour à la carte </span>
+    <span class="back-link-icon">←</span>
+    <span>Retour à la carte</span>
   </a>
 
   <!-- =====================================================
-         EN-TÊTE
-    ====================================================== -->
+       EN-TÊTE
+  ====================================================== -->
 
-  <div class="location-detail-header">
+  <header class="location-detail-header">
+    <!-- Icône Sheikah -->
     <div class="location-detail-symbol">
       <img src="{% static 'css/icons/sheikah-eye.svg' %}" alt="" />
     </div>
 
+    <!-- Personnage de la région -->
     <div class="location-character-container">
       <img
         src="{% static 'character/' %}{{ location.character }}"
-        class="region-character"
-        alt="{{ location.name }}"
+        class="region-character-image"
+        alt="Personnage de {{ location.name }}"
       />
     </div>
 
-    <div>
+    <!-- Informations de la région -->
+    <div class="location-header-info">
       <span class="section-eyebrow"> RÉGION D'HYRULE </span>
 
       <h1 class="hyrule-title">{{ location.name }}</h1>
@@ -39,28 +41,40 @@
 
         <span>
           Région :
-
-          <strong> {{ location.region }} </strong>
+          <strong>{{ location.region }}</strong>
         </span>
       </div>
     </div>
-  </div>
-  
+  </header>
 
   <!-- =====================================================
-         GRANDE CARTE
-    ====================================================== -->
+       GRANDE CARTE
+  ====================================================== -->
 
-  <div class="detail-map">
+  <section class="detail-map">
+    <!-- Carte générale d'Hyrule -->
     <img
       src="{% static 'images/hyrule-world-map.svg' %}"
-      alt="Carte d'Hyrule"
+      alt="Carte générale d'Hyrule"
       class="detail-map-image"
     />
 
-    <!-- PERSONNAGE REGION -->
+    <!-- Carte spécifique de la région -->
+    {% if location.map_image %}
 
-    <div class="region-character">
+    <img
+      src="{% static location.map_image %}"
+      alt="Carte de {{ location.name }}"
+      class="location-map"
+    />
+
+    {% endif %}
+
+    <!-- =================================================
+         PERSONNAGE SUR LA CARTE
+    ================================================== -->
+
+    <div class="region-character-map">
       <img
         src="{% static 'character/' %}{{ location.character }}"
         class="walking-character"
@@ -68,16 +82,27 @@
       />
     </div>
 
-    <!-- MARQUEUR DU LIEU -->
+    <!-- =================================================
+         MARQUEUR DU LIEU
+    ================================================== -->
 
-    <div class="current-location-marker">
-      <img src="{% static 'css/icons/sheikah-eye.svg' %}" alt="" />
+    <div
+      class="current-location-marker"
+      style="
+    --marker-x: {{ location.marker_x }}%;
+    --marker-y: {{ location.marker_y }}%;
+  "
+    >
+      <img
+        src="{% static 'css/icons/sheikah-eye.svg' %}"
+        alt="Position de {{ location.name }}"
+      />
     </div>
-  </div>
+  </section>
 
   <!-- =====================================================
-         QUÊTES DISPONIBLES
-    ====================================================== -->
+       QUÊTES DISPONIBLES
+  ====================================================== -->
 
   <section class="location-quests">
     <div class="section-heading-left">
@@ -96,10 +121,12 @@
       {% for quest in available_quests %}
 
       <a href="{% url 'quest_detail' quest.id %}" class="mini-quest-card">
+        <!-- Icône -->
         <div class="mini-quest-icon">
           <img src="{% static 'css/icons/master-sword.svg' %}" alt="" />
         </div>
 
+        <!-- Informations -->
         <div class="mini-quest-content">
           <span class="status status-available"> Disponible </span>
 
@@ -118,6 +145,7 @@
           </p>
         </div>
 
+        <!-- Flèche -->
         <span class="arrow"> → </span>
       </a>
 
@@ -134,8 +162,8 @@
   </section>
 
   <!-- =====================================================
-         QUÊTES TERMINÉES
-    ====================================================== -->
+       QUÊTES TERMINÉES
+  ====================================================== -->
 
   <section class="location-quests completed-section">
     <div class="section-heading-left">
@@ -157,10 +185,12 @@
         href="{% url 'quest_detail' quest.id %}"
         class="mini-quest-card completed-mini"
       >
+        <!-- Icône -->
         <div class="mini-quest-icon">
           <img src="{% static 'css/icons/hylian-shield.svg' %}" alt="" />
         </div>
 
+        <!-- Informations -->
         <div class="mini-quest-content">
           <span class="status status-completed"> Terminée </span>
 
@@ -179,6 +209,7 @@
           </p>
         </div>
 
+        <!-- Flèche -->
         <span class="arrow"> → </span>
       </a>
 

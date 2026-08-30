@@ -1,35 +1,19 @@
+
 import json
 
 import requests
 
-from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
 
 from .models import Location, Quest
+from .services.spellcheck_service import correct_text
 
 
-def correct_text(text):
-    """Corrige le texte en français si LanguageTool est disponible."""
-    try:
-        import language_tool_python
-
-        tool = language_tool_python.LanguageTool("fr")
-        corrected = language_tool_python.utils.correct(
-            text,
-            tool.check(text)
-        )
-        tool.close()
-        return corrected
-    except (ImportError, Exception):
-        return text
-
-
-
-
-# ==========================================
+# ============================================================
 # PAGE D'ACCUEIL
-# ==========================================
+# ============================================================
 
 def home(request):
 
@@ -64,9 +48,9 @@ def home(request):
     )
 
 
-# ==========================================
+# ============================================================
 # LISTE DES QUÊTES
-# ==========================================
+# ============================================================
 
 def quest_list(request):
 
@@ -94,17 +78,15 @@ def quest_list(request):
     }
 
     return render(
-    request,
-    "quests/quest_list.html",
-    {
-        "quests": quests
-    }
-)
+        request,
+        "quests/quest_list.html",
+        context
+    )
 
 
-# ==========================================
+# ============================================================
 # DETAIL D'UNE QUÊTE
-# ==========================================
+# ============================================================
 
 def quest_detail(request, id):
 
@@ -124,9 +106,9 @@ def quest_detail(request, id):
     )
 
 
-# ==========================================
+# ============================================================
 # LISTE DES LIEUX
-# ==========================================
+# ============================================================
 
 def location_list(request):
 
@@ -141,9 +123,9 @@ def location_list(request):
     )
 
 
-# ==========================================
+# ============================================================
 # DETAIL D'UN LIEU
-# ==========================================
+# ============================================================
 
 def location_detail(request, id):
 
@@ -173,9 +155,9 @@ def location_detail(request, id):
     )
 
 
-# ==========================================
-# CHATBOT ZELDA
-# ==========================================
+# ============================================================
+# CHATBOT ZELDA — PAGE
+# ============================================================
 
 def chat(request):
 
@@ -184,14 +166,17 @@ def chat(request):
         "quests/chat.html"
     )
 
-from django.views.decorators.http import require_POST
-import json
 
-from .services.spellcheck_service import correct_text
-
+# ============================================================
+# CHATBOT ZELDA — API
+# ============================================================
 
 @require_POST
 def chat_api(request):
+
+    # --------------------------------------------------------
+    # 1. Lecture du JSON
+    # --------------------------------------------------------
 
     try:
 
@@ -209,11 +194,14 @@ def chat_api(request):
         )
 
 
+    # --------------------------------------------------------
+    # 2. Récupération du message
+    # --------------------------------------------------------
+
     message = data.get(
         "message",
         ""
     ).strip()
-
 
 
     if not message:
@@ -226,110 +214,29 @@ def chat_api(request):
         )
 
 
-
-    corrected = correct_text(
-        message
-    )
-
-
-    prompt = f"""
-
-Tu es Hyrule Guide.
-
-Tu réponds uniquement
-dans l'univers de Zelda.
-
-Question :
-
-{corrected}
-
-Réponse :
-
-"""
-
-
-    try:
-
-        response = requests.post(
-
-            "http://localhost:11434/api/generate",
-
-            json={
-
-                "model": "llama3.2:3b",
-
-                "prompt": prompt,
-
-                "stream": False
-
-            },
-
-            timeout=120
-
-        )
-
-
-        response.raise_for_status()
-
-
-    except requests.exceptions.RequestException as e:
-
-        return JsonResponse(
-            {
-                "error": str(e)
-            },
-            status=503
-        )
-
-
-
-    result = response.json()
-
-
-    return JsonResponse(
-        {
-            "question_corrigee": corrected,
-            "answer": result.get(
-                "response",
-                ""
-            )
-        }
-    )
-
-
-    # ======================================
-    # CORRECTION ORTHOGRAPHIQUE
-    # ======================================
+    # --------------------------------------------------------
+    # 3. Correction orthographique
+    # --------------------------------------------------------
 
     corrected_message = correct_text(
         message
     )
 
+    print("==========================")
+    print("Question originale :", message)
+    print("Question corrigée  :", corrected_message)
+    print("==========================")
 
 
-    print(
-        "Question originale :",
-        message
-    )
-
-
-    print(
-        "Question corrigée :",
-        corrected_message
-    )
-
-
-
-    # ======================================
-    # PROMPT ZELDA
-    # ======================================
+    # --------------------------------------------------------
+    # 4. Prompt système Zelda
+    # --------------------------------------------------------
 
     system_prompt = """
-
 Tu es Hyrule Guide.
 
-Tu réponds uniquement
-dans l'univers de The Legend of Zelda.
+Tu réponds uniquement dans l'univers
+de The Legend of Zelda.
 
 Tu es spécialisé dans :
 
@@ -341,35 +248,37 @@ Tu es spécialisé dans :
 - lieux
 - objets
 - créatures
-- histoire Zelda
+- histoire de Zelda
 
 Réponds toujours en français.
 
 Si la question ne concerne pas Zelda,
-explique que tu es uniquement
-un guide d'Hyrule.
+explique que tu es uniquement un guide
+d'Hyrule.
 
-Réponse courte et claire.
-
+Réponds de manière courte, claire
+et utile.
 """
 
 
+    # --------------------------------------------------------
+    # 5. Création du prompt
+    # --------------------------------------------------------
 
     prompt = f"""
-
 {system_prompt}
-
 
 Question du joueur :
 
 {corrected_message}
 
-
 Réponse :
-
 """
 
 
+    # --------------------------------------------------------
+    # 6. Communication avec Ollama
+    # --------------------------------------------------------
 
     try:
 
@@ -387,62 +296,68 @@ Réponse :
 
                 "options": {
 
-                    "temperature":0.4,
+                    "temperature": 0.4,
 
-                    "num_predict":150
+                    "num_predict": 150
 
                 }
 
             },
 
             timeout=120
-
         )
-
 
         response.raise_for_status()
 
 
     except requests.exceptions.RequestException as e:
 
+        print(
+            "Erreur Ollama :",
+            str(e)
+        )
 
         return JsonResponse(
-
             {
-                "error":
-                f"Erreur Ollama : {str(e)}"
+                "error": f"Erreur Ollama : {str(e)}"
             },
-
             status=503
-
         )
 
 
+    # --------------------------------------------------------
+    # 7. Lecture de la réponse Ollama
+    # --------------------------------------------------------
 
-    data = response.json()
+    try:
+
+        ollama_data = response.json()
+
+    except ValueError:
+
+        return JsonResponse(
+            {
+                "error": "Réponse Ollama invalide"
+            },
+            status=503
+        )
 
 
-
-    answer = data.get(
+    answer = ollama_data.get(
         "response",
         ""
     ).strip()
 
 
+    # --------------------------------------------------------
+    # 8. Réponse JSON au frontend
+    # --------------------------------------------------------
 
     return JsonResponse(
-
         {
-
-            "question_originale":
-                message,
-
-            "question_corrigee":
-                corrected_message,
-
-            "answer":
-                answer
-
+            "question_originale": message,
+            "question_corrigee": corrected_message,
+            "answer": answer
         }
-
     )
+
