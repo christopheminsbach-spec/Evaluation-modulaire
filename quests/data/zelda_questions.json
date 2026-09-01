@@ -1,0 +1,502 @@
+[
+  {
+    "id": 1,
+    "question": "Comment s'appelle le héros principal de la série The Legend of Zelda ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 2,
+    "question": "Comment s'appelle la princesse d'Hyrule ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 3,
+    "question": "Quel est le principal antagoniste de nombreux jeux Zelda ?",
+    "category": "Ennemis"
+  },
+  {
+    "id": 4,
+    "question": "Comment s'appelle l'épée légendaire de Link ?",
+    "category": "Armes"
+  },
+  {
+    "id": 5,
+    "question": "Quel est le royaume principal de la série Zelda ?",
+    "category": "Lieux"
+  },
+  {
+    "id": 6,
+    "question": "Quel peuple vit principalement dans les montagnes d'Hyrule ?",
+    "category": "Peuples"
+  },
+  {
+    "id": 7,
+    "question": "Quel peuple est associé à l'eau dans Zelda ?",
+    "category": "Peuples"
+  },
+  {
+    "id": 8,
+    "question": "Quel peuple exclusivement féminin vit dans le désert ?",
+    "category": "Peuples"
+  },
+  {
+    "id": 9,
+    "question": "Comment s'appelle la fée qui accompagne Link dans Ocarina of Time ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 10,
+    "question": "Quel instrument Link utilise-t-il dans Ocarina of Time ?",
+    "category": "Objets"
+  },
+  {
+    "id": 11,
+    "question": "Dans quel jeu Link rencontre-t-il Midona ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 12,
+    "question": "Quel personnage accompagne Link dans Skyward Sword ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 13,
+    "question": "Quel est le nom du bateau de Link dans The Wind Waker ?",
+    "category": "Véhicules"
+  },
+  {
+    "id": 14,
+    "question": "Quel objet permet de contrôler le vent dans The Wind Waker ?",
+    "category": "Objets"
+  },
+  {
+    "id": 15,
+    "question": "Quel masque donne à Link une forme extrêmement puissante dans Majora's Mask ?",
+    "category": "Objets"
+  },
+  {
+    "id": 16,
+    "question": "Comment s'appelle le monde parallèle exploré dans Majora's Mask ?",
+    "category": "Lieux"
+  },
+  {
+    "id": 17,
+    "question": "Quel objet permet de voyager dans le temps dans Ocarina of Time ?",
+    "category": "Objets"
+  },
+  {
+    "id": 18,
+    "question": "Comment s'appelle le village natal de Link dans Twilight Princess ?",
+    "category": "Lieux"
+  },
+  {
+    "id": 19,
+    "question": "Quel animal Link devient-il dans Twilight Princess ?",
+    "category": "Transformations"
+  },
+  {
+    "id": 20,
+    "question": "Comment s'appelle le cheval emblématique de Link ?",
+    "category": "Animaux"
+  },
+  {
+    "id": 21,
+    "question": "Dans Breath of the Wild, combien de créatures divines Link doit-il libérer ?",
+    "category": "Quêtes"
+  },
+  {
+    "id": 22,
+    "question": "Quel est le nom de la tablette utilisée par Link dans Breath of the Wild ?",
+    "category": "Objets"
+  },
+  {
+    "id": 23,
+    "question": "Quel pouvoir permet de déplacer les objets métalliques dans Breath of the Wild ?",
+    "category": "Pouvoirs"
+  },
+  {
+    "id": 24,
+    "question": "Quel pouvoir permet de créer des blocs de glace dans Breath of the Wild ?",
+    "category": "Pouvoirs"
+  },
+  {
+    "id": 25,
+    "question": "Quel pouvoir permet de figer temporairement des objets dans Breath of the Wild ?",
+    "category": "Pouvoirs"
+  },
+  {
+    "id": 26,
+    "question": "Quel pouvoir permet de créer des explosions à distance dans Breath of the Wild ?",
+    "category": "Pouvoirs"
+  },
+  {
+    "id": 27,
+    "question": "Quel est le boss final de Breath of the Wild ?",
+    "category": "Boss"
+  },
+  {
+    "id": 28,
+    "question": "Quel personnage est le chef du village d'Elimith dans Breath of the Wild ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 29,
+    "question": "Comment s'appelle la région volcanique de Breath of the Wild ?",
+    "category": "Régions"
+  },
+  {
+    "id": 30,
+    "question": "Quelle région est principalement constituée d'un désert ?",
+    "category": "Régions"
+  },
+  {
+    "id": 31,
+    "question": "Quelle région est connue pour ses montagnes enneigées ?",
+    "category": "Régions"
+  },
+  {
+    "id": 32,
+    "question": "Quel personnage est le roi des Zoras dans Breath of the Wild ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 33,
+    "question": "Quel champion est associé aux Zoras ?",
+    "category": "Champions"
+  },
+  {
+    "id": 34,
+    "question": "Quel champion est associé aux Gorons ?",
+    "category": "Champions"
+  },
+  {
+    "id": 35,
+    "question": "Quel champion est associé aux Piafs ?",
+    "category": "Champions"
+  },
+  {
+    "id": 36,
+    "question": "Quel champion est associé aux Gerudos ?",
+    "category": "Champions"
+  },
+  {
+    "id": 37,
+    "question": "Quelle créature divine est associée aux Zoras ?",
+    "category": "Créatures divines"
+  },
+  {
+    "id": 38,
+    "question": "Quelle créature divine ressemble à un éléphant ?",
+    "category": "Créatures divines"
+  },
+  {
+    "id": 39,
+    "question": "Quelle créature divine est associée aux Piafs ?",
+    "category": "Créatures divines"
+  },
+  {
+    "id": 40,
+    "question": "Quelle créature divine est associée aux Gorons ?",
+    "category": "Créatures divines"
+  },
+  {
+    "id": 41,
+    "question": "Quelle créature divine est associée aux Gerudos ?",
+    "category": "Créatures divines"
+  },
+  {
+    "id": 42,
+    "question": "Comment s'appelle le château situé au centre d'Hyrule dans Breath of the Wild ?",
+    "category": "Lieux"
+  },
+  {
+    "id": 43,
+    "question": "Quel village abrite principalement les Sheikahs dans Breath of the Wild ?",
+    "category": "Lieux"
+  },
+  {
+    "id": 44,
+    "question": "Quel peuple est associé à la forêt Korogu ?",
+    "category": "Peuples"
+  },
+  {
+    "id": 45,
+    "question": "Quel personnage permet d'agrandir les sacoches de Link ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 46,
+    "question": "Quel objet permet à Link de parer les attaques ?",
+    "category": "Équipement"
+  },
+  {
+    "id": 47,
+    "question": "Quel objet permet à Link d'attaquer à distance avec des flèches ?",
+    "category": "Armes"
+  },
+  {
+    "id": 48,
+    "question": "Quel ennemi ressemble à un énorme cyclope dans Breath of the Wild ?",
+    "category": "Ennemis"
+  },
+  {
+    "id": 49,
+    "question": "Quel ennemi est connu pour être un puissant centaure dans Breath of the Wild ?",
+    "category": "Ennemis"
+  },
+  {
+    "id": 50,
+    "question": "Quel petit ennemi rouge est très fréquent dans Breath of the Wild ?",
+    "category": "Ennemis"
+  },
+  {
+    "id": 51,
+    "question": "Dans Tears of the Kingdom, quel pouvoir permet de fusionner des objets ?",
+    "category": "Pouvoirs"
+  },
+  {
+    "id": 52,
+    "question": "Quel pouvoir permet à Link de traverser certains plafonds dans Tears of the Kingdom ?",
+    "category": "Pouvoirs"
+  },
+  {
+    "id": 53,
+    "question": "Quel pouvoir permet de déplacer et assembler des objets dans Tears of the Kingdom ?",
+    "category": "Pouvoirs"
+  },
+  {
+    "id": 54,
+    "question": "Quel pouvoir permet de faire revenir les objets dans le temps dans Tears of the Kingdom ?",
+    "category": "Pouvoirs"
+  },
+  {
+    "id": 55,
+    "question": "Quel peuple ancien est principalement associé aux constructions de Tears of the Kingdom ?",
+    "category": "Peuples"
+  },
+  {
+    "id": 56,
+    "question": "Quel personnage est le roi des Soneaus dans Tears of the Kingdom ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 57,
+    "question": "Comment s'appelle la femme de Rauru ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 58,
+    "question": "Quel personnage est la sœur de Rauru ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 59,
+    "question": "Quel sage est associé aux Zoras dans Tears of the Kingdom ?",
+    "category": "Sages"
+  },
+  {
+    "id": 60,
+    "question": "Quel sage est associé aux Piafs dans Tears of the Kingdom ?",
+    "category": "Sages"
+  },
+  {
+    "id": 61,
+    "question": "Quel sage est associé aux Gorons dans Tears of the Kingdom ?",
+    "category": "Sages"
+  },
+  {
+    "id": 62,
+    "question": "Quel sage est associé aux Gerudos dans Tears of the Kingdom ?",
+    "category": "Sages"
+  },
+  {
+    "id": 63,
+    "question": "Qui est la cinquième sage de Tears of the Kingdom ?",
+    "category": "Sages"
+  },
+  {
+    "id": 64,
+    "question": "Quel personnage dirige le village d'Elimith dans Tears of the Kingdom ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 65,
+    "question": "Qui dirige les Gerudos dans Tears of the Kingdom ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 66,
+    "question": "Quel personnage dirige les recherches concernant les Profondeurs ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 67,
+    "question": "Quel personnage dirige les recherches de l'équipe d'Hyrule ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 68,
+    "question": "Quel personnage est spécialisé dans les recherches technologiques ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 69,
+    "question": "Quel est le principal antagoniste de Tears of the Kingdom ?",
+    "category": "Ennemis"
+  },
+  {
+    "id": 70,
+    "question": "Comment s'appelle le vaste monde souterrain de Tears of the Kingdom ?",
+    "category": "Lieux"
+  },
+  {
+    "id": 71,
+    "question": "Comment s'appelle la zone située au-dessus d'Hyrule dans Tears of the Kingdom ?",
+    "category": "Lieux"
+  },
+  {
+    "id": 72,
+    "question": "Comment s'appellent les dispositifs utilisés pour construire des véhicules dans Tears of the Kingdom ?",
+    "category": "Objets"
+  },
+  {
+    "id": 73,
+    "question": "Quel objet permet d'alimenter les constructions soneaus ?",
+    "category": "Objets"
+  },
+  {
+    "id": 74,
+    "question": "Quel objet permet d'augmenter la batterie de Link dans Tears of the Kingdom ?",
+    "category": "Objets"
+  },
+  {
+    "id": 75,
+    "question": "Quel type d'objet peut être fusionné avec une arme dans Tears of the Kingdom ?",
+    "category": "Équipement"
+  },
+  {
+    "id": 76,
+    "question": "Quel personnage peut améliorer les poches de Link ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 77,
+    "question": "Quel personnage collectionne les gemmes de monstres dans Tears of the Kingdom ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 78,
+    "question": "Quel est le nom du frère de Koltin ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 79,
+    "question": "Quel objet rare peut être utilisé pour améliorer certaines armures ?",
+    "category": "Objets"
+  },
+  {
+    "id": 80,
+    "question": "Quel objet permet généralement de récupérer de la vie dans Zelda ?",
+    "category": "Objets"
+  },
+  {
+    "id": 81,
+    "question": "Quelle monnaie est utilisée dans la plupart des jeux Zelda ?",
+    "category": "Monnaie"
+  },
+  {
+    "id": 82,
+    "question": "Quelle couleur de rubis vaut généralement le plus dans les jeux Zelda classiques ?",
+    "category": "Monnaie"
+  },
+  {
+    "id": 83,
+    "question": "Quel objet permet généralement d'ouvrir les portes verrouillées des donjons ?",
+    "category": "Objets"
+  },
+  {
+    "id": 84,
+    "question": "Quel objet permet de révéler les trésors dans les donjons classiques ?",
+    "category": "Objets"
+  },
+  {
+    "id": 85,
+    "question": "Quel objet indique généralement la disposition des salles d'un donjon ?",
+    "category": "Objets"
+  },
+  {
+    "id": 86,
+    "question": "Quel personnage est associé au peuple Sheikah ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 87,
+    "question": "Quel personnage est souvent présenté comme la protectrice de Zelda ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 88,
+    "question": "Quel personnage est le chef des pirates dans The Wind Waker ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 89,
+    "question": "Quelle identité secrète Tetra possède-t-elle ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 90,
+    "question": "Quel peuple minuscule apparaît dans The Minish Cap ?",
+    "category": "Peuples"
+  },
+  {
+    "id": 91,
+    "question": "Quel personnage accompagne Link sous la forme d'un chapeau dans The Minish Cap ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 92,
+    "question": "Quel est l'antagoniste principal de The Minish Cap ?",
+    "category": "Ennemis"
+  },
+  {
+    "id": 93,
+    "question": "Quel jeu Zelda se déroule principalement sur la Grande Mer ?",
+    "category": "Jeux"
+  },
+  {
+    "id": 94,
+    "question": "Quel jeu Zelda se déroule principalement autour de Célesbourg et dans le ciel ?",
+    "category": "Jeux"
+  },
+  {
+    "id": 95,
+    "question": "Quel animal permet à Link de voler dans Skyward Sword ?",
+    "category": "Animaux"
+  },
+  {
+    "id": 96,
+    "question": "Comment s'appelle l'épée habitée par une conscience dans Skyward Sword ?",
+    "category": "Armes"
+  },
+  {
+    "id": 97,
+    "question": "Quel personnage est le principal rival de Link dans Skyward Sword ?",
+    "category": "Ennemis"
+  },
+  {
+    "id": 98,
+    "question": "Quel personnage dirige le clan Yiga dans Breath of the Wild ?",
+    "category": "Ennemis"
+  },
+  {
+    "id": 99,
+    "question": "Quel célèbre marchand apparaît dans plusieurs jeux Zelda ?",
+    "category": "Personnages"
+  },
+  {
+    "id": 100,
+    "question": "Quel symbole est l'un des plus emblématiques de l'univers Zelda ?",
+    "category": "Lore"
+  }
+]

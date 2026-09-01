@@ -1,3 +1,4 @@
+
 from django.urls import path
 
 from . import views
@@ -5,11 +6,20 @@ from . import views
 
 urlpatterns = [
 
+    # ==========================================
+    # ACCUEIL
+    # ==========================================
+
     path(
         "",
         views.home,
         name="home"
     ),
+
+
+    # ==========================================
+    # QUÊTES
+    # ==========================================
 
     path(
         "quests/",
@@ -23,6 +33,11 @@ urlpatterns = [
         name="quest_detail"
     ),
 
+
+    # ==========================================
+    # LIEUX
+    # ==========================================
+
     path(
         "locations/",
         views.location_list,
@@ -35,11 +50,16 @@ urlpatterns = [
         name="location_detail"
     ),
 
-    # Chatbot Zelda
     path(
         "chat/",
         views.chat,
         name="chat"
     ),
+
+path(
+    "chat/api/",
+    views.chat_api,
+    name="chat_api"
+),
 
 ]
