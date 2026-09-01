@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "question": "Comment s'appelle le héros principal de la série The Legend of Zelda ?",
+    "answer": "Le héros principal de la série The Legend of Zelda s'appelle Link.",
+    "category": "Personnages"
+  },
+  {
+    "id": 2,
+    "question": "Comment s'appelle la princesse d'Hyrule ?",
+    "answer": "La princesse d'Hyrule s'appelle Zelda.",
+    "category": "Personnages"
+  }
+]

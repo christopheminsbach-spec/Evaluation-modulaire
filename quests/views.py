@@ -19,6 +19,9 @@ from .services.question_service import (
     get_questions_by_category,
 )
 
+from .services.rag_service import build_context
+from .services.prompt_service import build_zelda_prompt
+
 try:
     from .services.spellcheck_service import correct_text
 except ImportError:
