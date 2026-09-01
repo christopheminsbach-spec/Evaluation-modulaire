@@ -1,30 +1,84 @@
 import json
-
 import requests
 
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 
-from .models import Location, Quest
+from .models import (
+    Location,
+    Quest,
+    ChatConversation,
+    ChatMessage,
+)
 
+from .services.question_service import (
+    get_questions,
+    get_question,
+    get_categories,
+    get_questions_by_category,
+)
 
-def correct_text(text):
-    """Corrige le texte en français si LanguageTool est disponible."""
-    try:
-        import language_tool_python
-
-        tool = language_tool_python.LanguageTool("fr")
-        corrected = language_tool_python.utils.correct(
-            text,
-            tool.check(text)
-        )
-        tool.close()
-        return corrected
-    except (ImportError, Exception):
+try:
+    from .services.spellcheck_service import correct_text
+except ImportError:
+    def correct_text(text):
         return text
 
 
+# ==========================================
+# QUESTIONS ZELDA
+# ==========================================
+
+@require_GET
+def zelda_questions(request):
+
+    questions = get_questions()
+
+    return JsonResponse({
+        "count": len(questions),
+        "questions": questions,
+    })
+
+
+@require_GET
+def zelda_question_detail(request, question_id):
+
+    question = get_question(question_id)
+
+    if question is None:
+
+        return JsonResponse(
+            {
+                "error": "Question introuvable"
+            },
+            status=404
+        )
+
+    return JsonResponse(question)
+
+
+@require_GET
+def zelda_question_categories(request):
+
+    categories = get_categories()
+
+    return JsonResponse({
+        "count": len(categories),
+        "categories": categories,
+    })
+
+
+@require_GET
+def zelda_questions_category(request, category):
+
+    questions = get_questions_by_category(category)
+
+    return JsonResponse({
+        "category": category,
+        "count": len(questions),
+        "questions": questions,
+    })
 
 
 # ==========================================
@@ -170,27 +224,20 @@ def location_detail(request, id):
 
 
 # ==========================================
-# PAGE CHAT
+# CHAT ZELDA
 # ==========================================
 
 def chat(request):
 
-    # --------------------------------------
-    # AFFICHAGE DE LA PAGE
-    # --------------------------------------
+    return render(
+        request,
+        "quests/chat.html"
+    )
 
-    if request.method == "GET":
 
-        return render(
-            request,
-            "quests/chat.html"
-        )
-
-from django.views.decorators.http import require_POST
-import json
-
-from .services.spellcheck_service import correct_text
-
+# ==========================================
+# API CHAT ZELDA
+# ==========================================
 
 @require_POST
 def chat_api(request):
@@ -205,133 +252,40 @@ def chat_api(request):
 
         return JsonResponse(
             {
-                "error": "JSON invalide"
+                "error": "JSON invalide."
             },
-            status=405
+            status=400
         )
 
-
-    message = request.POST.get(
+    message = data.get(
         "message",
         ""
     ).strip()
-
-
 
     if not message:
 
         return JsonResponse(
             {
-                "error": "Message vide"
+                "error": "Message vide."
             },
             status=400
         )
 
-
-
-    corrected = correct_text(
-        message
-    )
-
-
-    prompt = f"""
-
-Tu es Hyrule Guide.
-
-Tu réponds uniquement
-dans l'univers de Zelda.
-
-Question :
-
-{corrected}
-
-Réponse :
-
-"""
-
-
     try:
 
-        response = requests.post(
-
-            "http://localhost:11434/api/generate",
-
-            json={
-
-                "model": "llama3.2:3b",
-
-                "prompt": prompt,
-
-                "stream": False
-
-            },
-
-            timeout=120
-
+        corrected_message = correct_text(
+            message
         )
 
+    except Exception:
 
-        response.raise_for_status()
-
-
-    except requests.exceptions.RequestException as e:
-
-        return JsonResponse(
-            {
-                "error": str(e)
-            },
-            status=503
-        )
-
-
-
-    result = response.json()
-
-
-    return JsonResponse(
-        {
-            "question_corrigee": corrected,
-            "answer": result.get(
-                "response",
-                ""
-            )
-        }
-    )
-
-
-    # ======================================
-    # CORRECTION ORTHOGRAPHIQUE
-    # ======================================
-
-    corrected_message = correct_text(
-        message
-    )
-
-
-
-    print(
-        "Question originale :",
-        message
-    )
-
-
-    print(
-        "Question corrigée :",
-        corrected_message
-    )
-
-
-
-    # ======================================
-    # PROMPT ZELDA
-    # ======================================
+        corrected_message = message
 
     system_prompt = """
-
 Tu es Hyrule Guide.
 
-Tu réponds uniquement
-dans l'univers de The Legend of Zelda.
+Tu réponds uniquement dans l'univers
+de The Legend of Zelda.
 
 Tu es spécialisé dans :
 
@@ -343,101 +297,292 @@ Tu es spécialisé dans :
 - lieux
 - objets
 - créatures
-- histoire Zelda
+- histoire de Zelda
 
-RÈGLES :
-
-1. Réponds toujours en français.
+Réponds toujours en français.
 
 Si la question ne concerne pas Zelda,
-explique que tu es uniquement
+explique simplement que tu es uniquement
 un guide d'Hyrule.
 
-Réponse courte et claire.
-
+Réponds de manière courte,
+claire et utile.
 """
-
-
 
     prompt = f"""
 {system_prompt}
-
 
 Question du joueur :
 
 {corrected_message}
 
-
 Réponse :
-
 """
-
-
 
     try:
 
         response = requests.post(
             "http://localhost:11434/api/generate",
-
             json={
-
                 "model": "llama3.2:3b",
-
                 "prompt": prompt,
                 "stream": False,
-
                 "options": {
                     "temperature": 0.4,
-                    "num_predict": 150
-                }
+                    "num_predict": 150,
+                },
             },
-
             timeout=120
-
         )
-
 
         response.raise_for_status()
 
-
     except requests.exceptions.RequestException as e:
-
 
         return JsonResponse(
             {
-                "error":
-                f"Erreur Ollama : {str(e)}"
+                "error": f"Erreur Ollama : {str(e)}"
             },
-
             status=503
-
         )
 
+    try:
 
+        ollama_data = response.json()
 
-    data = response.json()
+    except ValueError:
 
-
+        return JsonResponse(
+            {
+                "error": "Réponse Ollama invalide."
+            },
+            status=503
+        )
 
     answer = ollama_data.get(
         "response",
         ""
     ).strip()
 
+    return JsonResponse({
+        "question_originale": message,
+        "question_corrigee": corrected_message,
+        "answer": answer,
+    })
 
 
-    return JsonResponse(
+# ==========================================
+# CHAT CLASSIQUE
+# ==========================================
+
+def chat_classique(request):
+
+    session_key = request.session.session_key
+
+    if not session_key:
+
+        request.session.create()
+
+        session_key = request.session.session_key
+
+    conversation = (
+        ChatConversation.objects
+        .filter(session_key=session_key)
+        .order_by("-updated_at")
+        .first()
+    )
+
+    if conversation is None:
+
+        conversation = ChatConversation.objects.create(
+            session_key=session_key,
+            title="Nouvelle conversation"
+        )
+
+    messages = conversation.messages.all()
+
+    return render(
+        request,
+        "quests/chat_classique.html",
         {
-
-            "question_originale":
-                message,
-
-            "question_corrigee":
-                corrected_message,
-
-            "answer":
-                answer
-
+            "conversation": conversation,
+            "messages": messages,
         }
     )
 
+
+# ==========================================
+# API CHAT CLASSIQUE
+# ==========================================
+
+@require_POST
+def chat_classique_api(request):
+
+    try:
+
+        data = json.loads(
+            request.body
+        )
+
+    except json.JSONDecodeError:
+
+        return JsonResponse(
+            {
+                "error": "JSON invalide."
+            },
+            status=400
+        )
+
+    message = data.get(
+        "message",
+        ""
+    ).strip()
+
+    if not message:
+
+        return JsonResponse(
+            {
+                "error": "Message vide."
+            },
+            status=400
+        )
+
+    session_key = request.session.session_key
+
+    if not session_key:
+
+        request.session.create()
+
+        session_key = request.session.session_key
+
+    conversation_id = data.get(
+        "conversation_id"
+    )
+
+    if conversation_id:
+
+        conversation = get_object_or_404(
+            ChatConversation,
+            id=conversation_id,
+            session_key=session_key
+        )
+
+    else:
+
+        conversation = (
+            ChatConversation.objects
+            .filter(session_key=session_key)
+            .order_by("-updated_at")
+            .first()
+        )
+
+        if conversation is None:
+
+            conversation = ChatConversation.objects.create(
+                session_key=session_key,
+                title=message[:150]
+            )
+
+    ChatMessage.objects.create(
+        conversation=conversation,
+        role="user",
+        content=message
+    )
+
+    history = conversation.messages.all()
+
+    conversation_text = ""
+
+    for item in history:
+
+        if item.role == "user":
+
+            conversation_text += (
+                f"Utilisateur : {item.content}\n"
+            )
+
+        else:
+
+            conversation_text += (
+                f"Assistant : {item.content}\n"
+            )
+
+    prompt = f"""
+Tu es un assistant conversationnel.
+
+Réponds toujours en français.
+
+Voici l'historique de la conversation :
+
+{conversation_text}
+
+Réponds au dernier message de l'utilisateur
+de manière claire et naturelle.
+
+Assistant :
+"""
+
+    try:
+
+        response = requests.post(
+            "http://localhost:11434/api/generate",
+            json={
+                "model": "llama3.2:3b",
+                "prompt": prompt,
+                "stream": False,
+                "options": {
+                    "temperature": 0.6,
+                    "num_predict": 250,
+                },
+            },
+            timeout=120
+        )
+
+        response.raise_for_status()
+
+    except requests.exceptions.RequestException as e:
+
+        return JsonResponse(
+            {
+                "error": f"Erreur Ollama : {str(e)}"
+            },
+            status=503
+        )
+
+    try:
+
+        ollama_data = response.json()
+
+    except ValueError:
+
+        return JsonResponse(
+            {
+                "error": "Réponse Ollama invalide."
+            },
+            status=503
+        )
+
+    answer = ollama_data.get(
+        "response",
+        ""
+    ).strip()
+
+    if not answer:
+
+        answer = (
+            "Je n'ai pas réussi à générer une réponse."
+        )
+
+    ChatMessage.objects.create(
+        conversation=conversation,
+        role="assistant",
+        content=answer
+    )
+
+    conversation.save()
+
+    return JsonResponse({
+        "conversation_id": conversation.id,
+        "question": message,
+        "answer": answer,
+    })

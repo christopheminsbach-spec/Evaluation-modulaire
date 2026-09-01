@@ -1,6 +1,4 @@
-
 from django.urls import path
-
 from . import views
 
 
@@ -16,7 +14,6 @@ urlpatterns = [
         name="home"
     ),
 
-
     # ==========================================
     # QUÊTES
     # ==========================================
@@ -28,11 +25,10 @@ urlpatterns = [
     ),
 
     path(
-        "quest/<int:id>/",
+        "quests/<int:id>/",
         views.quest_detail,
         name="quest_detail"
     ),
-
 
     # ==========================================
     # LIEUX
@@ -45,10 +41,14 @@ urlpatterns = [
     ),
 
     path(
-        "location/<int:id>/",
+        "locations/<int:id>/",
         views.location_detail,
         name="location_detail"
     ),
+
+    # ==========================================
+    # CHAT ZELDA
+    # ==========================================
 
     path(
         "chat/",
@@ -56,10 +56,53 @@ urlpatterns = [
         name="chat"
     ),
 
-path(
-    "chat/api/",
-    views.chat_api,
-    name="chat_api"
-),
+    path(
+        "chat/api/",
+        views.chat_api,
+        name="chat_api"
+    ),
 
+    # ==========================================
+    # QUESTIONS JSON ZELDA
+    # ==========================================
+
+    path(
+        "api/zelda-questions/",
+        views.zelda_questions,
+        name="zelda_questions"
+    ),
+
+    path(
+        "api/zelda-questions/<int:question_id>/",
+        views.zelda_question_detail,
+        name="zelda_question_detail"
+    ),
+
+    path(
+        "api/zelda-questions/categories/",
+        views.zelda_question_categories,
+        name="zelda_question_categories"
+    ),
+
+    path(
+        "api/zelda-questions/category/<str:category>/",
+        views.zelda_questions_category,
+        name="zelda_questions_category"
+    ),
+
+    # ==========================================
+    # CHAT CLASSIQUE
+    # ==========================================
+
+    path(
+        "chat-classique/",
+        views.chat_classique,
+        name="chat_classique"
+    ),
+
+    path(
+        "chat-classique/api/",
+        views.chat_classique_api,
+        name="chat_classique_api"
+    ),
 ]
