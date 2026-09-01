@@ -1,448 +1,271 @@
-{% extends "base.html" %}
-{% load static %}
-
-{% block title %}
-Guide Zelda | Hyrule Quest Board
-{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% load static %} {% block title %} Guide Zelda |
+Hyrule Quest Board {% endblock %} {% block content %}
 
 <section class="chat-page">
-
-
-<!-- =====================================================
+  <!-- =====================================================
      EN-TÊTE DU GUIDE
 ====================================================== -->
 
-<div class="chat-header">
-
+  <div class="chat-header">
     <div class="magic-particles">
-        <span class="magic-particle"></span>
-        <span class="magic-particle"></span>
-        <span class="magic-particle"></span>
-        <span class="magic-particle"></span>
-        <span class="magic-particle"></span>
+      <span class="magic-particle"></span>
+      <span class="magic-particle"></span>
+      <span class="magic-particle"></span>
+      <span class="magic-particle"></span>
+      <span class="magic-particle"></span>
     </div>
 
     <div class="chat-header-icon">
-        <img
-            src="{% static 'css/icons/sheikah-eye.svg' %}"
-            alt="Guide Zelda"
-            class="chat-icon"
-        >
+      <img
+        src="{% static 'css/icons/sheikah-eye.svg' %}"
+        alt="Guide Zelda"
+        class="chat-icon"
+      />
     </div>
 
-    <span class="section-eyebrow">
-        GUIDE D'HYRULE
-    </span>
+    <span class="section-eyebrow"> GUIDE D'HYRULE </span>
 
-    <h1 class="hyrule-title">
-        Guide Zelda
-    </h1>
+    <h1 class="hyrule-title">Guide Zelda</h1>
 
     <p class="hyrule-subtitle">
-        Posez une question sur l'univers
-        de The Legend of Zelda.
+      Posez une question sur l'univers de The Legend of Zelda.
     </p>
+  </div>
 
-</div>
-
-
-<!-- =====================================================
+  <!-- =====================================================
      ZONE CATALOGUE + CHAT
 ====================================================== -->
 
-<div class="chat-layout">
-
-
+  <div class="chat-layout">
     <!-- =================================================
          CATALOGUE DES QUESTIONS
     ================================================== -->
 
     <aside class="questions-catalog">
+      <div class="catalog-header">
+        <div class="catalog-title-wrapper">
+          <img
+            src="{% static 'css/icons/triforce.svg' %}"
+            alt=""
+            class="catalog-icon"
+          />
 
-        <div class="catalog-header">
+          <div>
+            <h2>Mémo Zelda</h2>
 
-            <div class="catalog-title-wrapper">
-
-                <img
-                    src="{% static 'css/icons/triforce.svg' %}"
-                    alt=""
-                    class="catalog-icon"
-                >
-
-                <div>
-
-                    <h2>
-                        Mémo Zelda
-                    </h2>
-
-                    <span id="questions-count">
-                        Chargement des questions...
-                    </span>
-
-                </div>
-
-            </div>
-
+            <span id="questions-count"> Chargement des questions... </span>
+          </div>
         </div>
+      </div>
 
+      <!-- RECHERCHE -->
 
-        <!-- RECHERCHE -->
+      <div class="catalog-search">
+        <label for="question-search" class="sr-only">
+          Rechercher une question
+        </label>
 
-        <div class="catalog-search">
+        <input
+          type="search"
+          id="question-search"
+          placeholder="Rechercher une question..."
+          autocomplete="off"
+        />
+      </div>
 
-            <label
-                for="question-search"
-                class="sr-only"
-            >
-                Rechercher une question
-            </label>
+      <!-- FILTRE CATÉGORIE -->
 
-            <input
-                type="search"
-                id="question-search"
-                placeholder="Rechercher une question..."
-                autocomplete="off"
-            >
+      <div class="catalog-filter">
+        <label for="question-category" class="sr-only">
+          Filtrer par catégorie
+        </label>
 
+        <select id="question-category">
+          <option value="">Toutes les catégories</option>
+        </select>
+      </div>
+
+      <!-- LISTE -->
+
+      <div id="questions-list" class="questions-list">
+        <div class="catalog-loading">
+          <div class="catalog-spinner"></div>
+
+          <span> Chargement du catalogue... </span>
         </div>
+      </div>
 
+      <!-- MESSAGE AUCUN RÉSULTAT -->
 
-        <!-- FILTRE CATÉGORIE -->
+      <div id="questions-empty" class="questions-empty" hidden>
+        <img src="{% static 'css/icons/sheikah-eye.svg' %}" alt="" />
 
-        <div class="catalog-filter">
-
-            <label
-                for="question-category"
-                class="sr-only"
-            >
-                Filtrer par catégorie
-            </label>
-
-            <select id="question-category">
-
-                <option value="">
-                    Toutes les catégories
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <!-- LISTE -->
-
-        <div
-            id="questions-list"
-            class="questions-list"
-        >
-
-            <div class="catalog-loading">
-
-                <div class="catalog-spinner"></div>
-
-                <span>
-                    Chargement du catalogue...
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- MESSAGE AUCUN RÉSULTAT -->
-
-        <div
-            id="questions-empty"
-            class="questions-empty"
-            hidden
-        >
-
-            <img
-                src="{% static 'css/icons/sheikah-eye.svg' %}"
-                alt=""
-            >
-
-            <p>
-                Aucune question trouvée.
-            </p>
-
-        </div>
-
+        <p>Aucune question trouvée.</p>
+      </div>
     </aside>
-
 
     <!-- =================================================
          CONTENEUR DU CHAT
     ================================================== -->
 
     <div class="chat-container">
-
-
-        <!-- =================================================
+      <!-- =================================================
              ZONE DE CONVERSATION
         ================================================== -->
 
-        <div
-            id="chat-messages"
-            class="chat-messages"
-        >
+      <div id="chat-messages" class="chat-messages">
+        <!-- MESSAGE INITIAL -->
 
-            <!-- MESSAGE INITIAL -->
+        <div class="message assistant-message">
+          <div class="message-avatar">
+            <img
+              src="{% static 'css/icons/sheikah-eye.svg' %}"
+              alt="Guide d'Hyrule"
+            />
+          </div>
 
-            <div class="message assistant-message">
+          <div class="message-content">
+            <strong> Guide d'Hyrule </strong>
 
-                <div class="message-avatar">
+            <p>Bienvenue, aventurier !</p>
 
-                    <img
-                        src="{% static 'css/icons/sheikah-eye.svg' %}"
-                        alt="Guide d'Hyrule"
-                    >
+            <p>
+              Je peux répondre à tes questions concernant l'univers de Zelda.
+            </p>
 
-                </div>
+            <p>
+              Tu peux également choisir directement une question dans le
+              <strong>Mémo Zelda</strong>
+              à gauche.
+            </p>
 
-                <div class="message-content">
+            <p>Par exemple :</p>
 
-                    <strong>
-                        Guide d'Hyrule
-                    </strong>
+            <ul>
+              <li>Qui est la princesse Zelda ?</li>
 
-                    <p>
-                        Bienvenue, aventurier !
-                    </p>
+              <li>Où se trouve le Domaine Zora ?</li>
 
-                    <p>
-                        Je peux répondre à tes questions
-                        concernant l'univers de Zelda.
-                    </p>
+              <li>Qui est Ganondorf ?</li>
 
-                    <p>
-                        Tu peux également choisir directement
-                        une question dans le <strong>Mémo Zelda</strong>
-                        à gauche.
-                    </p>
-
-                    <p>
-                        Par exemple :
-                    </p>
-
-                    <ul>
-
-                        <li>
-                            Qui est la princesse Zelda ?
-                        </li>
-
-                        <li>
-                            Où se trouve le Domaine Zora ?
-                        </li>
-
-                        <li>
-                            Qui est Ganondorf ?
-                        </li>
-
-                        <li>
-                            Quels sont les différents peuples
-                            d'Hyrule ?
-                        </li>
-
-                    </ul>
-
-                </div>
-
-            </div>
-
+              <li>Quels sont les différents peuples d'Hyrule ?</li>
+            </ul>
+          </div>
         </div>
+      </div>
 
+      <!-- =================================================
+     EXPORT PDF
+================================================== -->
 
-        <!-- =================================================
-             INDICATEUR DE RÉFLEXION
-        ================================================== -->
+      <div class="chat-actions">
+        <a id="export-pdf-button" class="btn btn-secondary" href="#">
+          <img
+            src="{% static 'css/icons/book.svg' %}"
+            alt=""
+            class="button-icon"
+          />
 
-        <div
-            id="chat-typing"
-            class="chat-typing"
-            hidden
-        >
+          <span> Exporter la discussion en PDF </span>
+        </a>
+      </div>
 
-            <div class="message-avatar">
-
-                <img
-                    src="{% static 'css/icons/sheikah-eye.svg' %}"
-                    alt="Guide d'Hyrule"
-                >
-
-            </div>
-
-            <div class="typing-content">
-
-                <span></span>
-                <span></span>
-                <span></span>
-
-                <small>
-                    Le Guide d'Hyrule réfléchit...
-                </small>
-
-            </div>
-
-        </div>
-
-
-        <!-- =================================================
+      <!-- =================================================
              FORMULAIRE
         ================================================== -->
 
-        <form
-            id="chat-form"
-            class="chat-form"
-        >
+      <form id="chat-form" class="chat-form">
+        {% csrf_token %}
 
-            {% csrf_token %}
+        <div class="chat-input-wrapper">
+          <!-- ICÔNE -->
 
-            <div class="chat-input-wrapper">
+          <div class="chat-input-icon">
+            <img src="{% static 'css/icons/master-sword.svg' %}" alt="" />
+          </div>
 
+          <!-- INPUT -->
 
-                <!-- ICÔNE -->
+          <input
+            type="text"
+            id="message"
+            name="message"
+            placeholder="Posez votre question sur Zelda..."
+            autocomplete="off"
+            required
+          />
 
-                <div class="chat-input-icon">
+          <!-- BOUTON -->
 
-                    <img
-                        src="{% static 'css/icons/master-sword.svg' %}"
-                        alt=""
-                    >
+          <button type="submit" id="send-button" class="btn btn-primary">
+            <img
+              src="{% static 'css/icons/sheikah-eye.svg' %}"
+              alt=""
+              class="button-icon"
+            />
 
-                </div>
+            <span> Envoyer </span>
+          </button>
+        </div>
+      </form>
 
-
-                <!-- INPUT -->
-
-                <input
-                    type="text"
-                    id="message"
-                    name="message"
-                    placeholder="Posez votre question sur Zelda..."
-                    autocomplete="off"
-                    required
-                >
-
-
-                <!-- BOUTON -->
-
-                <button
-                    type="submit"
-                    id="send-button"
-                    class="btn btn-primary"
-                >
-
-                    <img
-                        src="{% static 'css/icons/sheikah-eye.svg' %}"
-                        alt=""
-                        class="button-icon"
-                    >
-
-                    <span>
-                        Envoyer
-                    </span>
-
-                </button>
-
-            </div>
-
-        </form>
-
-
-        <!-- =================================================
+      <!-- =================================================
              STATUT
         ================================================== -->
 
-        <div
-            id="chat-status"
-            class="chat-status"
-        ></div>
-
+      <div id="chat-status" class="chat-status"></div>
     </div>
+  </div>
 
-</div>
-
-
-<!-- =====================================================
+  <!-- =====================================================
      INFORMATIONS
 ====================================================== -->
 
-<div class="chat-info-grid">
-
-
+  <div class="chat-info-grid">
     <!-- UNIVERS -->
 
     <article class="chat-info-card">
+      <img
+        src="{% static 'css/icons/triforce.svg' %}"
+        alt=""
+        class="hyrule-icon"
+      />
 
-        <img
-            src="{% static 'css/icons/triforce.svg' %}"
-            alt=""
-            class="hyrule-icon"
-        >
+      <h3>Univers Zelda</h3>
 
-        <h3>
-            Univers Zelda
-        </h3>
-
-        <p>
-            Posez vos questions concernant
-            les personnages, les lieux et
-            l'histoire de Zelda.
-        </p>
-
+      <p>
+        Posez vos questions concernant les personnages, les lieux et l'histoire
+        de Zelda.
+      </p>
     </article>
-
 
     <!-- MÉMO -->
 
     <article class="chat-info-card">
+      <img src="{% static 'css/icons/fairy.svg' %}" alt="" class="fairy-icon" />
 
-        <img
-            src="{% static 'css/icons/fairy.svg' %}"
-            alt=""
-            class="fairy-icon"
-        >
+      <h3>Mémo des 100 questions</h3>
 
-        <h3>
-            Mémo des 100 questions
-        </h3>
-
-        <p>
-            Utilisez le catalogue pour trouver
-            rapidement une question et l'envoyer
-            directement au Guide d'Hyrule.
-        </p>
-
+      <p>
+        Utilisez le catalogue pour trouver rapidement une question et l'envoyer
+        directement au Guide d'Hyrule.
+      </p>
     </article>
-
 
     <!-- PROTECTION -->
 
     <article class="chat-info-card">
+      <img
+        src="{% static 'css/icons/hylian-shield.svg' %}"
+        alt=""
+        class="shield-icon"
+      />
 
-        <img
-            src="{% static 'css/icons/hylian-shield.svg' %}"
-            alt=""
-            class="shield-icon"
-        >
+      <h3>Aide à l'aventure</h3>
 
-        <h3>
-            Aide à l'aventure
-        </h3>
-
-        <p>
-            Préparez votre prochaine aventure
-            grâce aux connaissances du guide.
-        </p>
-
+      <p>Préparez votre prochaine aventure grâce aux connaissances du guide.</p>
     </article>
-
-</div>
-
-
+  </div>
 </section>
 
 <!-- =====================================================

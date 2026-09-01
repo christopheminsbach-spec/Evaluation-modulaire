@@ -1,4 +1,6 @@
+
 from django.urls import path
+
 from . import views
 
 
@@ -13,6 +15,7 @@ urlpatterns = [
         views.home,
         name="home"
     ),
+
 
     # ==========================================
     # QUÊTES
@@ -30,6 +33,7 @@ urlpatterns = [
         name="quest_detail"
     ),
 
+
     # ==========================================
     # LIEUX
     # ==========================================
@@ -46,6 +50,7 @@ urlpatterns = [
         name="location_detail"
     ),
 
+
     # ==========================================
     # CHAT ZELDA
     # ==========================================
@@ -61,6 +66,24 @@ urlpatterns = [
         views.chat_api,
         name="chat_api"
     ),
+
+
+    # ==========================================
+    # CHAT CLASSIQUE
+    # ==========================================
+
+    path(
+        "chat/classique/",
+        views.chat_classique,
+        name="chat_classique"
+    ),
+
+    path(
+        "chat/classique/api/",
+        views.chat_classique_api,
+        name="chat_classique_api"
+    ),
+
 
     # ==========================================
     # QUESTIONS JSON ZELDA
@@ -90,19 +113,16 @@ urlpatterns = [
         name="zelda_questions_category"
     ),
 
+
     # ==========================================
-    # CHAT CLASSIQUE
+    # EXPORT PDF DES DISCUSSIONS
     # ==========================================
 
     path(
-        "chat-classique/",
-        views.chat_classique,
-        name="chat_classique"
+        "chat/export/<int:id>/",
+        views.export_chat_pdf,
+        name="export_chat_pdf"
     ),
 
-    path(
-        "chat-classique/api/",
-        views.chat_classique_api,
-        name="chat_classique_api"
-    ),
 ]
+

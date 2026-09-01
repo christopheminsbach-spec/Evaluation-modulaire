@@ -1,138 +1,105 @@
 import json
 from pathlib import Path
-from difflib import SequenceMatcher
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-KNOWLEDGE_FILE = BASE_DIR / "data" / "zelda_knowledge.json"
+
+DATA_FILE = (
+    BASE_DIR /
+    "data" /
+    "zelda_qa.json"
+)
 
 
-def load_knowledge():
-    if not KNOWLEDGE_FILE.exists():
+
+def load_zelda_memory():
+
+    if not DATA_FILE.exists():
+
         return []
 
-    try:
-        with open(
-            KNOWLEDGE_FILE,
-            "r",
-            encoding="utf-8"
-        ) as file:
-            data = json.load(file)
 
-        if isinstance(data, list):
-            return data
+    with open(
+        DATA_FILE,
+        "r",
+        encoding="utf-8"
+    ) as file:
 
-        if isinstance(data, dict):
-            return data.get("questions", [])
-
-    except (
-        OSError,
-        json.JSONDecodeError
-    ):
-        return []
-
-    return []
+        return json.load(file)
 
 
-def similarity(text1, text2):
-    return SequenceMatcher(
-        None,
-        text1.lower(),
-        text2.lower()
-    ).ratio()
 
+def build_context(question):
 
-def search_knowledge(question, limit=3):
+    knowledge = load_zelda_memory()
 
-    knowledge = load_knowledge()
-
-    if not knowledge:
-        return []
-
-    question = question.strip().lower()
 
     results = []
 
+
+    question_lower = (
+        question.lower()
+    )
+
+
     for item in knowledge:
 
-        question_text = str(
-            item.get("question", "")
+
+        text = (
+            item["question"]
+            +
+            " "
+            +
+            item["answer"]
+        ).lower()
+
+
+        words = question_lower.split()
+
+
+        score = sum(
+            1
+            for word in words
+            if word in text
         )
 
-        answer = str(
-            item.get("answer", "")
-        )
 
-        category = str(
-            item.get("category", "")
-        )
+        if score > 0:
 
-        if not question_text or not answer:
-            continue
+            results.append(
+                (
+                    score,
+                    item
+                )
+            )
 
-        score = similarity(
-            question,
-            question_text
-        )
-
-        words = question.split()
-
-        for word in words:
-
-            if len(word) < 3:
-                continue
-
-            if word in question_text.lower():
-                score += 0.08
-
-            if word in answer.lower():
-                score += 0.04
-
-            if word in category.lower():
-                score += 0.05
-
-        results.append({
-            "id": item.get("id"),
-            "question": question_text,
-            "answer": answer,
-            "category": category,
-            "score": score,
-        })
 
     results.sort(
-        key=lambda item: item["score"],
-        reverse=True
+        reverse=True,
+        key=lambda x:x[0]
     )
 
-    return results[:limit]
+
+    best_results = [
+        item
+        for score,item in results[:5]
+    ]
 
 
-def build_context(question, limit=3):
+    context = ""
 
-    results = search_knowledge(
-        question,
-        limit=limit
-    )
 
-    if not results:
-        return ""
+    for item in best_results:
 
-    context = []
+        context += f"""
 
-    for item in results:
+Question :
+{item['question']}
 
-        context.append(
-            f"""
-Question de la base :
-{item["question"]}
+Réponse :
+{item['answer']}
 
-Réponse de la base :
-{item["answer"]}
+"""
 
-Catégorie :
-{item["category"]}
-""".strip()
-        )
-
-    return "\n\n---\n\n".join(context)
+    return context

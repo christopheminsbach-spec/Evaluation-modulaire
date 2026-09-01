@@ -1,8 +1,9 @@
+
 import json
 import requests
 
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from django.views.decorators.http import require_POST, require_GET
 
 from .models import (
@@ -19,14 +20,65 @@ from .services.question_service import (
     get_questions_by_category,
 )
 
-from .services.rag_service import build_context
-from .services.prompt_service import build_zelda_prompt
+from .services.pdf_service import create_chat_pdf
 
 try:
     from .services.spellcheck_service import correct_text
 except ImportError:
+
     def correct_text(text):
         return text
+
+
+# ==========================================
+# EXPORT PDF CHAT
+# ==========================================
+
+def export_chat_pdf(request, id):
+
+    session_key = request.session.session_key
+
+    if not session_key:
+        return JsonResponse(
+            {
+                "error": "Session introuvable."
+            },
+            status=403
+        )
+
+    conversation = get_object_or_404(
+        ChatConversation,
+        id=id,
+        session_key=session_key
+    )
+
+    try:
+
+        pdf_path = create_chat_pdf(
+            conversation
+        )
+
+        pdf_file = open(
+            pdf_path,
+            "rb"
+        )
+
+        return FileResponse(
+            pdf_file,
+            as_attachment=True,
+            filename=f"hyrule_chat_{id}.pdf"
+        )
+
+    except Exception as e:
+
+        return JsonResponse(
+            {
+                "error": (
+                    f"Impossible de créer le PDF : {str(e)}"
+                )
+            },
+            status=500
+        )
 
 
 # ==========================================
@@ -47,7 +99,9 @@ def zelda_questions(request):
 @require_GET
 def zelda_question_detail(request, question_id):
 
-    question = get_question(question_id)
+    question = get_question(
+        question_id
+    )
 
     if question is None:
 
@@ -58,7 +112,9 @@ def zelda_question_detail(request, question_id):
             status=404
         )
 
-    return JsonResponse(question)
+    return JsonResponse(
+        question
+    )
 
 
 @require_GET
@@ -75,7 +131,9 @@ def zelda_question_categories(request):
 @require_GET
 def zelda_questions_category(request, category):
 
-    questions = get_questions_by_category(category)
+    questions = get_questions_by_category(
+        category
+    )
 
     return JsonResponse({
         "category": category,
@@ -131,7 +189,9 @@ def quest_list(request):
         "location"
     ).all()
 
-    status = request.GET.get("status")
+    status = request.GET.get(
+        "status"
+    )
 
     if status == "available":
 
@@ -227,7 +287,7 @@ def location_detail(request, id):
 
 
 # ==========================================
-# CHAT ZELDA
+# PAGE CHAT ZELDA
 # ==========================================
 
 def chat(request):
@@ -240,6 +300,9 @@ def chat(request):
 
 # ==========================================
 # API CHAT ZELDA
+#
+# Cette API utilise maintenant une conversation
+# persistante liée à la session.
 # ==========================================
 
 @require_POST
@@ -274,6 +337,58 @@ def chat_api(request):
             status=400
         )
 
+    # ======================================
+    # SESSION
+    # ======================================
+
+    session_key = request.session.session_key
+
+    if not session_key:
+
+        request.session.create()
+
+        session_key = request.session.session_key
+
+    # ======================================
+    # CONVERSATION
+    # ======================================
+
+    conversation_id = data.get(
+        "conversation_id"
+    )
+
+    if conversation_id:
+
+        conversation = get_object_or_404(
+            ChatConversation,
+            id=conversation_id,
+            session_key=session_key
+        )
+
+    else:
+
+        conversation = (
+            ChatConversation.objects
+            .filter(
+                session_key=session_key
+            )
+            .order_by("-updated_at")
+            .first()
+        )
+
+        if conversation is None:
+
+            conversation = (
+                ChatConversation.objects.create(
+                    session_key=session_key,
+                    title=message[:150]
+                )
+            )
+
+    # ======================================
+    # CORRECTION ORTHOGRAPHIQUE
+    # ======================================
+
     try:
 
         corrected_message = correct_text(
@@ -284,29 +399,81 @@ def chat_api(request):
 
         corrected_message = message
 
+    # ======================================
+    # SAUVEGARDE MESSAGE UTILISATEUR
+    # ======================================
+
+    ChatMessage.objects.create(
+        conversation=conversation,
+        role="user",
+        content=corrected_message
+    )
+
+    # ======================================
+    # HISTORIQUE
+    # ======================================
+
+    history = conversation.messages.all()
+
+    conversation_text = ""
+
+    for item in history:
+
+        if item.role == "user":
+
+            conversation_text += (
+                f"Utilisateur : "
+                f"{item.content}\n"
+            )
+
+        else:
+
+            conversation_text += (
+                f"Guide d'Hyrule : "
+                f"{item.content}\n"
+            )
+
+    # ======================================
+    # PROMPT ZELDA
+    # ======================================
+
     system_prompt = """
-Tu es Hyrule Guide.
+Tu es le Guide d'Hyrule.
 
-Tu réponds uniquement dans l'univers
-de The Legend of Zelda.
+Tu es un assistant spécialisé
+dans l'univers de The Legend of Zelda.
 
-Tu es spécialisé dans :
+Tu réponds toujours en français.
+
+Tu peux parler notamment de :
 
 - Link
 - Zelda
 - Ganondorf
 - Hyrule
 - personnages
+- peuples
 - lieux
 - objets
+- armes
 - créatures
+- ennemis
+- boss
+- quêtes
+- régions
 - histoire de Zelda
-
-Réponds toujours en français.
+- Breath of the Wild
+- Tears of the Kingdom
+- Ocarina of Time
+- Twilight Princess
+- The Wind Waker
+- Skyward Sword
+- Majora's Mask
+- The Minish Cap
 
 Si la question ne concerne pas Zelda,
-explique simplement que tu es uniquement
-un guide d'Hyrule.
+explique poliment que tu es uniquement
+le Guide d'Hyrule.
 
 Réponds de manière courte,
 claire et utile.
@@ -315,12 +482,20 @@ claire et utile.
     prompt = f"""
 {system_prompt}
 
-Question du joueur :
+Historique de la conversation :
+
+{conversation_text}
+
+Dernière question du joueur :
 
 {corrected_message}
 
-Réponse :
+Réponse du Guide d'Hyrule :
 """
+
+    # ======================================
+    # OLLAMA
+    # ======================================
 
     try:
 
@@ -331,8 +506,8 @@ Réponse :
                 "prompt": prompt,
                 "stream": False,
                 "options": {
-                    "temperature": 0.4,
-                    "num_predict": 150,
+                    "temperature": 0.6,
+                    "num_predict": 250,
                 },
             },
             timeout=120
@@ -348,6 +523,10 @@ Réponse :
             },
             status=503
         )
+
+    # ======================================
+    # REPONSE OLLAMA
+    # ======================================
 
     try:
 
@@ -367,7 +546,31 @@ Réponse :
         ""
     ).strip()
 
+    if not answer:
+
+        answer = (
+            "Je n'ai pas réussi à générer "
+            "une réponse."
+        )
+
+    # ======================================
+    # SAUVEGARDE REPONSE
+    # ======================================
+
+    ChatMessage.objects.create(
+        conversation=conversation,
+        role="assistant",
+        content=answer
+    )
+
+    conversation.save()
+
+    # ======================================
+    # REPONSE API
+    # ======================================
+
     return JsonResponse({
+        "conversation_id": conversation.id,
         "question_originale": message,
         "question_corrigee": corrected_message,
         "answer": answer,
@@ -390,16 +593,20 @@ def chat_classique(request):
 
     conversation = (
         ChatConversation.objects
-        .filter(session_key=session_key)
+        .filter(
+            session_key=session_key
+        )
         .order_by("-updated_at")
         .first()
     )
 
     if conversation is None:
 
-        conversation = ChatConversation.objects.create(
-            session_key=session_key,
-            title="Nouvelle conversation"
+        conversation = (
+            ChatConversation.objects.create(
+                session_key=session_key,
+                title="Nouvelle conversation"
+            )
         )
 
     messages = conversation.messages.all()
@@ -474,23 +681,35 @@ def chat_classique_api(request):
 
         conversation = (
             ChatConversation.objects
-            .filter(session_key=session_key)
+            .filter(
+                session_key=session_key
+            )
             .order_by("-updated_at")
             .first()
         )
 
         if conversation is None:
 
-            conversation = ChatConversation.objects.create(
-                session_key=session_key,
-                title=message[:150]
+            conversation = (
+                ChatConversation.objects.create(
+                    session_key=session_key,
+                    title=message[:150]
+                )
             )
+
+    # ======================================
+    # MESSAGE UTILISATEUR
+    # ======================================
 
     ChatMessage.objects.create(
         conversation=conversation,
         role="user",
         content=message
     )
+
+    # ======================================
+    # HISTORIQUE
+    # ======================================
 
     history = conversation.messages.all()
 
@@ -501,14 +720,20 @@ def chat_classique_api(request):
         if item.role == "user":
 
             conversation_text += (
-                f"Utilisateur : {item.content}\n"
+                f"Utilisateur : "
+                f"{item.content}\n"
             )
 
         else:
 
             conversation_text += (
-                f"Assistant : {item.content}\n"
+                f"Assistant : "
+                f"{item.content}\n"
             )
+
+    # ======================================
+    # PROMPT
+    # ======================================
 
     prompt = f"""
 Tu es un assistant conversationnel.
@@ -524,6 +749,10 @@ de manière claire et naturelle.
 
 Assistant :
 """
+
+    # ======================================
+    # OLLAMA
+    # ======================================
 
     try:
 
@@ -552,6 +781,10 @@ Assistant :
             status=503
         )
 
+    # ======================================
+    # REPONSE
+    # ======================================
+
     try:
 
         ollama_data = response.json()
@@ -573,8 +806,13 @@ Assistant :
     if not answer:
 
         answer = (
-            "Je n'ai pas réussi à générer une réponse."
+            "Je n'ai pas réussi à générer "
+            "une réponse."
         )
+
+    # ======================================
+    # SAUVEGARDE REPONSE
+    # ======================================
 
     ChatMessage.objects.create(
         conversation=conversation,
@@ -589,3 +827,4 @@ Assistant :
         "question": message,
         "answer": answer,
     })
+

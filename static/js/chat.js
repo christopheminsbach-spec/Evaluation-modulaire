@@ -1,85 +1,96 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("chat-form");
-    const input = document.getElementById("message");
-    const messages = document.getElementById("chat-messages");
-    const status = document.getElementById("chat-status");
-    const sendButton = document.getElementById("send-button");
-    const typing = document.getElementById("chat-typing");
+  const form = document.getElementById("chat-form");
+  const input = document.getElementById("message");
+  const messages = document.getElementById("chat-messages");
+  const status = document.getElementById("chat-status");
+  const sendButton = document.getElementById("send-button");
+  const typing = document.getElementById("chat-typing");
 
-    const questionsList = document.getElementById("questions-list");
-    const questionsEmpty = document.getElementById("questions-empty");
-    const questionsCount = document.getElementById("questions-count");
-    const questionSearch = document.getElementById("question-search");
-    const questionCategory = document.getElementById("question-category");
+  const questionsList = document.getElementById("questions-list");
+  const questionsEmpty = document.getElementById("questions-empty");
+  const questionsCount = document.getElementById("questions-count");
+  const questionSearch = document.getElementById("question-search");
+  const questionCategory = document.getElementById("question-category");
 
-    const QUESTIONS_API = "/api/zelda-questions/";
-    const CHAT_API = "/chat/api/";
+  const exportButton = document.getElementById("export-pdf-button");
+  if (exportButton) {
+    exportButton.addEventListener("click", function (event) {
+      event.preventDefault();
 
-    let questions = [];
+      fetch("/chat/classique/")
+        .then((response) => response.json())
+        .then((data) => {
+          window.location.href = `/chat/export/${data.conversation_id}/`;
+        });
+    });
+  }
 
-    function escapeHtml(value) {
-        const div = document.createElement("div");
-        div.textContent = value ?? "";
-        return div.innerHTML;
+  const QUESTIONS_API = "/api/zelda-questions/";
+  const CHAT_API = "/chat/api/";
+
+  let questions = [];
+
+  function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = value ?? "";
+    return div.innerHTML;
+  }
+
+  function getCookie(name) {
+    const cookies = document.cookie.split(";");
+
+    for (const cookie of cookies) {
+      const trimmed = cookie.trim();
+
+      if (trimmed.startsWith(`${name}=`)) {
+        return decodeURIComponent(trimmed.substring(name.length + 1));
+      }
     }
 
-    function getCookie(name) {
-        const cookies = document.cookie.split(";");
+    return null;
+  }
 
-        for (const cookie of cookies) {
-            const trimmed = cookie.trim();
-
-            if (trimmed.startsWith(`${name}=`)) {
-                return decodeURIComponent(
-                    trimmed.substring(name.length + 1)
-                );
-            }
-        }
-
-        return null;
+  function scrollMessagesToBottom() {
+    if (!messages) {
+      return;
     }
 
-    function scrollMessagesToBottom() {
-        if (!messages) {
-            return;
-        }
+    messages.scrollTop = messages.scrollHeight;
+  }
 
-        messages.scrollTop = messages.scrollHeight;
+  function setStatus(text = "", type = "") {
+    if (!status) {
+      return;
     }
 
-    function setStatus(text = "", type = "") {
-        if (!status) {
-            return;
-        }
+    status.textContent = text;
+    status.className = "chat-status";
 
-        status.textContent = text;
-        status.className = "chat-status";
+    if (type) {
+      status.classList.add(type);
+    }
+  }
 
-        if (type) {
-            status.classList.add(type);
-        }
+  function setLoading(loading) {
+    if (input) {
+      input.disabled = loading;
     }
 
-    function setLoading(loading) {
-        if (input) {
-            input.disabled = loading;
-        }
-
-        if (sendButton) {
-            sendButton.disabled = loading;
-        }
-
-        if (typing) {
-            typing.hidden = !loading;
-        }
+    if (sendButton) {
+      sendButton.disabled = loading;
     }
 
-    function addUserMessage(text) {
-        const messageElement = document.createElement("div");
+    if (typing) {
+      typing.hidden = !loading;
+    }
+  }
 
-        messageElement.className = "message user-message";
+  function addUserMessage(text) {
+    const messageElement = document.createElement("div");
 
-        messageElement.innerHTML = `
+    messageElement.className = "message user-message";
+
+    messageElement.innerHTML = `
             <div class="message-avatar">
                 <img
                     src="/static/css/icons/master-sword.svg"
@@ -93,21 +104,21 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
 
-        messages.appendChild(messageElement);
+    messages.appendChild(messageElement);
 
-        scrollMessagesToBottom();
-    }
+    scrollMessagesToBottom();
+  }
 
-    function addAssistantMessage(text) {
-        const messageElement = document.createElement("div");
+  function addAssistantMessage(text) {
+    const messageElement = document.createElement("div");
 
-        messageElement.className = "message assistant-message";
+    messageElement.className = "message assistant-message";
 
-        const formattedText = escapeHtml(text)
-            .replace(/\n\n/g, "</p><p>")
-            .replace(/\n/g, "<br>");
+    const formattedText = escapeHtml(text)
+      .replace(/\n\n/g, "</p><p>")
+      .replace(/\n/g, "<br>");
 
-        messageElement.innerHTML = `
+    messageElement.innerHTML = `
             <div class="message-avatar">
                 <img
                     src="/static/css/icons/sheikah-eye.svg"
@@ -121,67 +132,56 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
 
-        messages.appendChild(messageElement);
+    messages.appendChild(messageElement);
 
-        scrollMessagesToBottom();
+    scrollMessagesToBottom();
+  }
+
+  function renderQuestions() {
+    if (!questionsList) {
+      return;
     }
 
-    function renderQuestions() {
-        if (!questionsList) {
-            return;
-        }
+    const searchValue = (questionSearch?.value || "").trim().toLowerCase();
 
-        const searchValue = (
-            questionSearch?.value || ""
-        ).trim().toLowerCase();
+    const categoryValue = (questionCategory?.value || "").trim().toLowerCase();
 
-        const categoryValue = (
-            questionCategory?.value || ""
-        ).trim().toLowerCase();
+    const filteredQuestions = questions.filter((item) => {
+      const questionText = String(item.question || "").toLowerCase();
 
-        const filteredQuestions = questions.filter((item) => {
-            const questionText = String(
-                item.question || ""
-            ).toLowerCase();
+      const category = String(item.category || "").toLowerCase();
 
-            const category = String(
-                item.category || ""
-            ).toLowerCase();
+      const matchesSearch =
+        !searchValue ||
+        questionText.includes(searchValue) ||
+        category.includes(searchValue);
 
-            const matchesSearch =
-                !searchValue ||
-                questionText.includes(searchValue) ||
-                category.includes(searchValue);
+      const matchesCategory = !categoryValue || category === categoryValue;
 
-            const matchesCategory =
-                !categoryValue ||
-                category === categoryValue;
+      return matchesSearch && matchesCategory;
+    });
 
-            return matchesSearch && matchesCategory;
-        });
+    questionsList.innerHTML = "";
 
-        questionsList.innerHTML = "";
+    if (questionsCount) {
+      questionsCount.textContent = `${filteredQuestions.length} question${filteredQuestions.length > 1 ? "s" : ""}`;
+    }
 
-        if (questionsCount) {
-            questionsCount.textContent =
-                `${filteredQuestions.length} question${filteredQuestions.length > 1 ? "s" : ""}`;
-        }
+    if (questionsEmpty) {
+      questionsEmpty.hidden = filteredQuestions.length !== 0;
+    }
 
-        if (questionsEmpty) {
-            questionsEmpty.hidden = filteredQuestions.length !== 0;
-        }
+    filteredQuestions.forEach((item, index) => {
+      const button = document.createElement("button");
 
-        filteredQuestions.forEach((item, index) => {
-            const button = document.createElement("button");
+      button.type = "button";
+      button.className = "question-item";
 
-            button.type = "button";
-            button.className = "question-item";
+      const id = item.id ?? index + 1;
+      const question = item.question ?? "";
+      const category = item.category ?? "";
 
-            const id = item.id ?? index + 1;
-            const question = item.question ?? "";
-            const category = item.category ?? "";
-
-            button.innerHTML = `
+      button.innerHTML = `
                 <span class="question-number">
                     ${String(id).padStart(2, "0")}
                 </span>
@@ -190,86 +190,75 @@ document.addEventListener("DOMContentLoaded", () => {
                     ${escapeHtml(question)}
 
                     ${
-                        category
-                            ? `<span class="question-category">${escapeHtml(category)}</span>`
-                            : ""
+                      category
+                        ? `<span class="question-category">${escapeHtml(category)}</span>`
+                        : ""
                     }
                 </span>
             `;
 
-            button.addEventListener("click", () => {
-                selectQuestion(question);
-            });
+      button.addEventListener("click", () => {
+        selectQuestion(question);
+      });
 
-            questionsList.appendChild(button);
-        });
+      questionsList.appendChild(button);
+    });
+  }
+
+  function populateCategories() {
+    if (!questionCategory) {
+      return;
     }
 
-    function populateCategories() {
-        if (!questionCategory) {
-            return;
-        }
+    const categories = [
+      ...new Set(questions.map((item) => item.category).filter(Boolean)),
+    ].sort((a, b) =>
+      String(a).localeCompare(String(b), "fr", {
+        sensitivity: "base",
+      }),
+    );
 
-        const categories = [
-            ...new Set(
-                questions
-                    .map((item) => item.category)
-                    .filter(Boolean)
-            ),
-        ].sort((a, b) =>
-            String(a).localeCompare(
-                String(b),
-                "fr",
-                {
-                    sensitivity: "base",
-                }
-            )
-        );
-
-        questionCategory.innerHTML = `
+    questionCategory.innerHTML = `
             <option value="">
                 Toutes les catégories
             </option>
         `;
 
-        categories.forEach((category) => {
-            const option = document.createElement("option");
+    categories.forEach((category) => {
+      const option = document.createElement("option");
 
-            option.value = category;
-            option.textContent = category;
+      option.value = category;
+      option.textContent = category;
 
-            questionCategory.appendChild(option);
-        });
+      questionCategory.appendChild(option);
+    });
+  }
+
+  function selectQuestion(question) {
+    if (!input) {
+      return;
     }
 
-    function selectQuestion(question) {
-        if (!input) {
-            return;
-        }
+    input.value = question;
 
-        input.value = question;
+    input.focus();
 
-        input.focus();
+    input.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+    });
 
-        input.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-        });
+    setStatus("Question ajoutée au champ du chat.", "success");
 
-        setStatus(
-            "Question ajoutée au champ du chat.",
-            "success"
-        );
+    setTimeout(() => {
+      setStatus("");
+    }, 2500);
+  }
 
-        setTimeout(() => {
-            setStatus("");
-        }, 2500);
-    }
-
-    async function loadQuestions() {
-        try {
-            if (questionsList) {
-                questionsList.innerHTML = `
+  async function loadQuestions() {
+    try {
+      if (questionsList) {
+        questionsList.innerHTML = `
                     <div class="catalog-loading">
                         <div class="catalog-spinner"></div>
                         <span>
@@ -277,177 +266,140 @@ document.addEventListener("DOMContentLoaded", () => {
                         </span>
                     </div>
                 `;
-            }
+      }
 
-            const response = await fetch(
-                QUESTIONS_API,
-                {
-                    method: "GET",
-                    headers: {
-                        Accept: "application/json",
-                    },
-                    credentials: "same-origin",
-                }
-            );
+      const response = await fetch(QUESTIONS_API, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+        credentials: "same-origin",
+      });
 
-            if (!response.ok) {
-                throw new Error(
-                    `Erreur HTTP ${response.status}`
-                );
-            }
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP ${response.status}`);
+      }
 
-            const data = await response.json();
+      const data = await response.json();
 
-            if (Array.isArray(data)) {
-                questions = data;
-            } else if (Array.isArray(data.questions)) {
-                questions = data.questions;
-            } else {
-                questions = [];
-            }
+      if (Array.isArray(data)) {
+        questions = data;
+      } else if (Array.isArray(data.questions)) {
+        questions = data.questions;
+      } else {
+        questions = [];
+      }
 
-            populateCategories();
-            renderQuestions();
+      populateCategories();
+      renderQuestions();
+    } catch (error) {
+      console.error("Erreur lors du chargement des questions :", error);
 
-        } catch (error) {
-            console.error(
-                "Erreur lors du chargement des questions :",
-                error
-            );
-
-            if (questionsList) {
-                questionsList.innerHTML = `
+      if (questionsList) {
+        questionsList.innerHTML = `
                     <div class="catalog-loading">
                         <span>
                             Impossible de charger le catalogue.
                         </span>
                     </div>
                 `;
-            }
+      }
 
-            if (questionsCount) {
-                questionsCount.textContent =
-                    "Catalogue indisponible";
-            }
-        }
+      if (questionsCount) {
+        questionsCount.textContent = "Catalogue indisponible";
+      }
+    }
+  }
+
+  async function sendMessage(message) {
+    const csrfToken = getCookie("csrftoken");
+
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
+
+    if (csrfToken) {
+      headers["X-CSRFToken"] = csrfToken;
     }
 
-    async function sendMessage(message) {
-        const csrfToken = getCookie("csrftoken");
+    const response = await fetch(CHAT_API, {
+      method: "POST",
+      headers,
+      credentials: "same-origin",
+      body: JSON.stringify({
+        message: message,
+      }),
+    });
 
-        const headers = {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-        };
+    let data;
 
-        if (csrfToken) {
-            headers["X-CSRFToken"] = csrfToken;
-        }
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error("Le serveur a retourné une réponse invalide.");
+    }
 
-        const response = await fetch(
-            CHAT_API,
-            {
-                method: "POST",
-                headers,
-                credentials: "same-origin",
-                body: JSON.stringify({
-                    message: message,
-                }),
-            }
+    if (!response.ok) {
+      throw new Error(data.error || `Erreur HTTP ${response.status}`);
+    }
+
+    return data;
+  }
+
+  if (form) {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const message = input?.value.trim();
+
+      if (!message) {
+        return;
+      }
+
+      addUserMessage(message);
+
+      input.value = "";
+
+      setStatus("");
+      setLoading(true);
+
+      try {
+        const data = await sendMessage(message);
+
+        const answer =
+          data.answer || "Je n'ai pas réussi à générer une réponse.";
+
+        addAssistantMessage(answer);
+
+        setStatus("Réponse du Guide d'Hyrule reçue.", "success");
+      } catch (error) {
+        console.error("Erreur du chat :", error);
+
+        addAssistantMessage(
+          "Désolé, le Guide d'Hyrule n'est pas disponible pour le moment.",
         );
 
-        let data;
+        setStatus(error.message || "Une erreur est survenue.", "error");
+      } finally {
+        setLoading(false);
 
-        try {
-            data = await response.json();
-        } catch {
-            throw new Error(
-                "Le serveur a retourné une réponse invalide."
-            );
+        if (input) {
+          input.focus();
         }
+      }
+    });
+  }
 
-        if (!response.ok) {
-            throw new Error(
-                data.error ||
-                `Erreur HTTP ${response.status}`
-            );
-        }
+  if (questionSearch) {
+    questionSearch.addEventListener("input", renderQuestions);
+  }
 
-        return data;
-    }
+  if (questionCategory) {
+    questionCategory.addEventListener("change", renderQuestions);
+  }
 
-    if (form) {
-        form.addEventListener("submit", async (event) => {
-            event.preventDefault();
+  loadQuestions();
 
-            const message = input?.value.trim();
-
-            if (!message) {
-                return;
-            }
-
-            addUserMessage(message);
-
-            input.value = "";
-
-            setStatus("");
-            setLoading(true);
-
-            try {
-                const data = await sendMessage(message);
-
-                const answer =
-                    data.answer ||
-                    "Je n'ai pas réussi à générer une réponse.";
-
-                addAssistantMessage(answer);
-
-                setStatus(
-                    "Réponse du Guide d'Hyrule reçue.",
-                    "success"
-                );
-
-            } catch (error) {
-                console.error(
-                    "Erreur du chat :",
-                    error
-                );
-
-                addAssistantMessage(
-                    "Désolé, le Guide d'Hyrule n'est pas disponible pour le moment."
-                );
-
-                setStatus(
-                    error.message ||
-                    "Une erreur est survenue.",
-                    "error"
-                );
-
-            } finally {
-                setLoading(false);
-
-                if (input) {
-                    input.focus();
-                }
-            }
-        });
-    }
-
-    if (questionSearch) {
-        questionSearch.addEventListener(
-            "input",
-            renderQuestions
-        );
-    }
-
-    if (questionCategory) {
-        questionCategory.addEventListener(
-            "change",
-            renderQuestions
-        );
-    }
-
-    loadQuestions();
-
-    scrollMessagesToBottom();
+  scrollMessagesToBottom();
 });
