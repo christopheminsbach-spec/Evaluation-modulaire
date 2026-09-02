@@ -5,23 +5,20 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-DATA_FILE = (
+QUESTIONS_FILE = (
     BASE_DIR /
     "data" /
-    "zelda_qa.json"
+    "zelda_questions.json"
 )
 
 
+def load_zelda_database():
 
-def load_zelda_memory():
-
-    if not DATA_FILE.exists():
-
+    if not QUESTIONS_FILE.exists():
         return []
 
-
     with open(
-        DATA_FILE,
+        QUESTIONS_FILE,
         "r",
         encoding="utf-8"
     ) as file:
@@ -30,76 +27,109 @@ def load_zelda_memory():
 
 
 
-def build_context(question):
+def search_zelda_context(question):
 
-    knowledge = load_zelda_memory()
+    database = load_zelda_database()
+
+    question_lower = question.lower()
 
 
     results = []
 
 
-    question_lower = (
-        question.lower()
-    )
-
-
-    for item in knowledge:
-
+    for item in database:
 
         text = (
             item["question"]
-            +
-            " "
-            +
-            item["answer"]
-        ).lower()
-
-
-        words = question_lower.split()
-
-
-        score = sum(
-            1
-            for word in words
-            if word in text
+            .lower()
         )
+
+
+        keywords = (
+            question_lower
+            .split()
+        )
+
+
+        score = 0
+
+
+        for word in keywords:
+
+            if word in text:
+
+                score += 1
+
 
 
         if score > 0:
 
             results.append(
-                (
-                    score,
-                    item
-                )
+                {
+                    "question":
+                        item["question"],
+
+                    "answer":
+                        item.get(
+                            "answer",
+                            ""
+                        ),
+
+                    "category":
+                        item["category"],
+
+                    "score":
+                        score
+                }
             )
 
 
+
     results.sort(
-        reverse=True,
-        key=lambda x:x[0]
+        key=lambda x:x["score"],
+        reverse=True
     )
 
 
-    best_results = [
-        item
-        for score,item in results[:5]
-    ]
+    return results[:5]
+
+
+
+def build_context(question):
+
+
+    results = search_zelda_context(
+        question
+    )
+
+
+    if not results:
+
+        return (
+            "Aucune information "
+            "spécifique trouvée."
+        )
+
 
 
     context = ""
 
 
-    for item in best_results:
+    for item in results:
 
         context += f"""
 
-Question :
+Question connue :
 {item['question']}
 
 Réponse :
 {item['answer']}
 
+Catégorie :
+{item['category']}
+
+---
 """
+
 
     return context

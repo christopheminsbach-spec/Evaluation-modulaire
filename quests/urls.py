@@ -1,4 +1,3 @@
-
 from django.urls import path
 
 from . import views
@@ -6,9 +5,9 @@ from . import views
 
 urlpatterns = [
 
-    # ==========================================
+    # ==========================
     # ACCUEIL
-    # ==========================================
+    # ==========================
 
     path(
         "",
@@ -17,9 +16,9 @@ urlpatterns = [
     ),
 
 
-    # ==========================================
-    # QUÊTES
-    # ==========================================
+    # ==========================
+    # QUETES
+    # ==========================
 
     path(
         "quests/",
@@ -34,9 +33,9 @@ urlpatterns = [
     ),
 
 
-    # ==========================================
-    # LIEUX
-    # ==========================================
+    # ==========================
+    # LOCATIONS
+    # ==========================
 
     path(
         "locations/",
@@ -51,9 +50,9 @@ urlpatterns = [
     ),
 
 
-    # ==========================================
-    # CHAT ZELDA
-    # ==========================================
+    # ==========================
+    # CHAT HYRULE
+    # ==========================
 
     path(
         "chat/",
@@ -61,16 +60,10 @@ urlpatterns = [
         name="chat"
     ),
 
-    path(
-        "chat/api/",
-        views.chat_api,
-        name="chat_api"
-    ),
 
-
-    # ==========================================
+    # ==========================
     # CHAT CLASSIQUE
-    # ==========================================
+    # ==========================
 
     path(
         "chat/classique/",
@@ -78,16 +71,22 @@ urlpatterns = [
         name="chat_classique"
     ),
 
+
+    # ==========================
+    # API CHAT CLASSIQUE
+    # RAG + MEMOIRE + OLLAMA
+    # ==========================
+
     path(
-        "chat/classique/api/",
+        "chat/api/",
         views.chat_classique_api,
         name="chat_classique_api"
     ),
 
 
-    # ==========================================
-    # QUESTIONS JSON ZELDA
-    # ==========================================
+    # ==========================
+    # QUESTIONS ZELDA
+    # ==========================
 
     path(
         "api/zelda-questions/",
@@ -95,34 +94,36 @@ urlpatterns = [
         name="zelda_questions"
     ),
 
+
     path(
         "api/zelda-questions/<int:question_id>/",
         views.zelda_question_detail,
         name="zelda_question_detail"
     ),
 
+
     path(
-        "api/zelda-questions/categories/",
+        "api/zelda-categories/",
         views.zelda_question_categories,
         name="zelda_question_categories"
     ),
 
+
     path(
-        "api/zelda-questions/category/<str:category>/",
+        "api/zelda-category/<str:category>/",
         views.zelda_questions_category,
         name="zelda_questions_category"
     ),
 
 
-    # ==========================================
-    # EXPORT PDF DES DISCUSSIONS
-    # ==========================================
+    # ==========================
+    # EXPORT PDF
+    # ==========================
 
     path(
-        "chat/export/<int:id>/",
+        "chat/pdf/<int:id>/",
         views.export_chat_pdf,
         name="export_chat_pdf"
     ),
 
 ]
-

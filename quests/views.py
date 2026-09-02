@@ -1,10 +1,21 @@
-
 import json
 import requests
 
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse, FileResponse
-from django.views.decorators.http import require_POST, require_GET
+from django.shortcuts import (
+    render,
+    get_object_or_404
+)
+
+from django.http import (
+    JsonResponse,
+    FileResponse
+)
+
+from django.views.decorators.http import (
+    require_POST,
+    require_GET
+)
+
 
 from .models import (
     Location,
@@ -13,6 +24,7 @@ from .models import (
     ChatMessage,
 )
 
+
 from .services.question_service import (
     get_questions,
     get_question,
@@ -20,80 +32,75 @@ from .services.question_service import (
     get_questions_by_category,
 )
 
-from .services.pdf_service import create_chat_pdf
+
+from .services.rag_service import (
+    build_context
+)
+
+
+from .services.prompt_service import (
+    build_zelda_prompt
+)
+
+
+from .services.pdf_service import (
+    create_chat_pdf
+)
+
 
 try:
     from .services.spellcheck_service import correct_text
+
 except ImportError:
 
     def correct_text(text):
         return text
 
 
-# ==========================================
+
+# =====================================================
 # EXPORT PDF CHAT
-# ==========================================
+# =====================================================
 
 def export_chat_pdf(request, id):
 
-    session_key = request.session.session_key
-
-    if not session_key:
-        return JsonResponse(
-            {
-                "error": "Session introuvable."
-            },
-            status=403
-        )
-
     conversation = get_object_or_404(
         ChatConversation,
-        id=id,
-        session_key=session_key
+        id=id
     )
 
-    try:
 
-        pdf_path = create_chat_pdf(
-            conversation
-        )
-
-        pdf_file = open(
-            pdf_path,
-            "rb"
-        )
-
-        return FileResponse(
-            pdf_file,
-            as_attachment=True,
-            filename=f"hyrule_chat_{id}.pdf"
-        )
-
-    except Exception as e:
-
-        return JsonResponse(
-            {
-                "error": (
-                    f"Impossible de créer le PDF : {str(e)}"
-                )
-            },
-            status=500
-        )
+    pdf_path = create_chat_pdf(
+        conversation
+    )
 
 
-# ==========================================
-# QUESTIONS ZELDA
-# ==========================================
+    return FileResponse(
+        open(pdf_path, "rb"),
+        as_attachment=True,
+        filename=f"hyrule_chat_{id}.pdf"
+    )
+
+
+
+# =====================================================
+# QUESTIONS ZELDA API
+# =====================================================
 
 @require_GET
 def zelda_questions(request):
 
     questions = get_questions()
 
+
     return JsonResponse({
+
         "count": len(questions),
-        "questions": questions,
+
+        "questions": questions
+
     })
+
 
 
 @require_GET
@@ -102,6 +109,7 @@ def zelda_question_detail(request, question_id):
     question = get_question(
         question_id
     )
+
 
     if question is None:
 
@@ -112,9 +120,11 @@ def zelda_question_detail(request, question_id):
             status=404
         )
 
+
     return JsonResponse(
         question
     )
+
 
 
 @require_GET
@@ -122,10 +132,15 @@ def zelda_question_categories(request):
 
     categories = get_categories()
 
+
     return JsonResponse({
+
         "count": len(categories),
-        "categories": categories,
+
+        "categories": categories
+
     })
+
 
 
 @require_GET
@@ -135,28 +150,37 @@ def zelda_questions_category(request, category):
         category
     )
 
+
     return JsonResponse({
+
         "category": category,
+
         "count": len(questions),
-        "questions": questions,
+
+        "questions": questions
+
     })
 
 
-# ==========================================
-# PAGE D'ACCUEIL
-# ==========================================
+
+# =====================================================
+# ACCUEIL
+# =====================================================
 
 def home(request):
 
     total = Quest.objects.count()
 
+
     available = Quest.objects.filter(
         completed=False
     ).count()
 
+
     completed = Quest.objects.filter(
         completed=True
     ).count()
+
 
     total_rewards = sum(
         Quest.objects.values_list(
@@ -165,23 +189,23 @@ def home(request):
         )
     )
 
-    context = {
-        "total": total,
-        "available": available,
-        "completed": completed,
-        "total_rewards": total_rewards,
-    }
 
     return render(
         request,
         "home.html",
-        context
+        {
+            "total": total,
+            "available": available,
+            "completed": completed,
+            "total_rewards": total_rewards,
+        }
     )
 
 
-# ==========================================
-# LISTE DES QUÊTES
-# ==========================================
+
+# =====================================================
+# QUETES
+# =====================================================
 
 def quest_list(request):
 
@@ -189,9 +213,11 @@ def quest_list(request):
         "location"
     ).all()
 
+
     status = request.GET.get(
         "status"
     )
+
 
     if status == "available":
 
@@ -199,11 +225,13 @@ def quest_list(request):
             completed=False
         )
 
+
     elif status == "completed":
 
         quests = quests.filter(
             completed=True
         )
+
 
     return render(
         request,
@@ -215,9 +243,6 @@ def quest_list(request):
     )
 
 
-# ==========================================
-# DETAIL D'UNE QUÊTE
-# ==========================================
 
 def quest_detail(request, id):
 
@@ -228,6 +253,7 @@ def quest_detail(request, id):
         id=id
     )
 
+
     return render(
         request,
         "quests/quest_detail.html",
@@ -237,13 +263,15 @@ def quest_detail(request, id):
     )
 
 
-# ==========================================
-# LISTE DES LIEUX
-# ==========================================
+
+# =====================================================
+# LOCATIONS
+# =====================================================
 
 def location_list(request):
 
     locations = Location.objects.all()
+
 
     return render(
         request,
@@ -254,9 +282,6 @@ def location_list(request):
     )
 
 
-# ==========================================
-# DETAIL D'UN LIEU
-# ==========================================
 
 def location_detail(request, id):
 
@@ -265,15 +290,18 @@ def location_detail(request, id):
         id=id
     )
 
+
     available_quests = Quest.objects.filter(
         location=location,
         completed=False
     )
 
+
     completed_quests = Quest.objects.filter(
         location=location,
         completed=True
     )
+
 
     return render(
         request,
@@ -286,9 +314,10 @@ def location_detail(request, id):
     )
 
 
-# ==========================================
-# PAGE CHAT ZELDA
-# ==========================================
+
+# =====================================================
+# CHAT HYRULE
+# =====================================================
 
 def chat(request):
 
@@ -298,298 +327,23 @@ def chat(request):
     )
 
 
-# ==========================================
-# API CHAT ZELDA
-#
-# Cette API utilise maintenant une conversation
-# persistante liée à la session.
-# ==========================================
 
-@require_POST
-def chat_api(request):
-
-    try:
-
-        data = json.loads(
-            request.body
-        )
-
-    except json.JSONDecodeError:
-
-        return JsonResponse(
-            {
-                "error": "JSON invalide."
-            },
-            status=400
-        )
-
-    message = data.get(
-        "message",
-        ""
-    ).strip()
-
-    if not message:
-
-        return JsonResponse(
-            {
-                "error": "Message vide."
-            },
-            status=400
-        )
-
-    # ======================================
-    # SESSION
-    # ======================================
-
-    session_key = request.session.session_key
-
-    if not session_key:
-
-        request.session.create()
-
-        session_key = request.session.session_key
-
-    # ======================================
-    # CONVERSATION
-    # ======================================
-
-    conversation_id = data.get(
-        "conversation_id"
-    )
-
-    if conversation_id:
-
-        conversation = get_object_or_404(
-            ChatConversation,
-            id=conversation_id,
-            session_key=session_key
-        )
-
-    else:
-
-        conversation = (
-            ChatConversation.objects
-            .filter(
-                session_key=session_key
-            )
-            .order_by("-updated_at")
-            .first()
-        )
-
-        if conversation is None:
-
-            conversation = (
-                ChatConversation.objects.create(
-                    session_key=session_key,
-                    title=message[:150]
-                )
-            )
-
-    # ======================================
-    # CORRECTION ORTHOGRAPHIQUE
-    # ======================================
-
-    try:
-
-        corrected_message = correct_text(
-            message
-        )
-
-    except Exception:
-
-        corrected_message = message
-
-    # ======================================
-    # SAUVEGARDE MESSAGE UTILISATEUR
-    # ======================================
-
-    ChatMessage.objects.create(
-        conversation=conversation,
-        role="user",
-        content=corrected_message
-    )
-
-    # ======================================
-    # HISTORIQUE
-    # ======================================
-
-    history = conversation.messages.all()
-
-    conversation_text = ""
-
-    for item in history:
-
-        if item.role == "user":
-
-            conversation_text += (
-                f"Utilisateur : "
-                f"{item.content}\n"
-            )
-
-        else:
-
-            conversation_text += (
-                f"Guide d'Hyrule : "
-                f"{item.content}\n"
-            )
-
-    # ======================================
-    # PROMPT ZELDA
-    # ======================================
-
-    system_prompt = """
-Tu es le Guide d'Hyrule.
-
-Tu es un assistant spécialisé
-dans l'univers de The Legend of Zelda.
-
-Tu réponds toujours en français.
-
-Tu peux parler notamment de :
-
-- Link
-- Zelda
-- Ganondorf
-- Hyrule
-- personnages
-- peuples
-- lieux
-- objets
-- armes
-- créatures
-- ennemis
-- boss
-- quêtes
-- régions
-- histoire de Zelda
-- Breath of the Wild
-- Tears of the Kingdom
-- Ocarina of Time
-- Twilight Princess
-- The Wind Waker
-- Skyward Sword
-- Majora's Mask
-- The Minish Cap
-
-Si la question ne concerne pas Zelda,
-explique poliment que tu es uniquement
-le Guide d'Hyrule.
-
-Réponds de manière courte,
-claire et utile.
-"""
-
-    prompt = f"""
-{system_prompt}
-
-Historique de la conversation :
-
-{conversation_text}
-
-Dernière question du joueur :
-
-{corrected_message}
-
-Réponse du Guide d'Hyrule :
-"""
-
-    # ======================================
-    # OLLAMA
-    # ======================================
-
-    try:
-
-        response = requests.post(
-            "http://localhost:11434/api/generate",
-            json={
-                "model": "llama3.2:3b",
-                "prompt": prompt,
-                "stream": False,
-                "options": {
-                    "temperature": 0.6,
-                    "num_predict": 250,
-                },
-            },
-            timeout=120
-        )
-
-        response.raise_for_status()
-
-    except requests.exceptions.RequestException as e:
-
-        return JsonResponse(
-            {
-                "error": f"Erreur Ollama : {str(e)}"
-            },
-            status=503
-        )
-
-    # ======================================
-    # REPONSE OLLAMA
-    # ======================================
-
-    try:
-
-        ollama_data = response.json()
-
-    except ValueError:
-
-        return JsonResponse(
-            {
-                "error": "Réponse Ollama invalide."
-            },
-            status=503
-        )
-
-    answer = ollama_data.get(
-        "response",
-        ""
-    ).strip()
-
-    if not answer:
-
-        answer = (
-            "Je n'ai pas réussi à générer "
-            "une réponse."
-        )
-
-    # ======================================
-    # SAUVEGARDE REPONSE
-    # ======================================
-
-    ChatMessage.objects.create(
-        conversation=conversation,
-        role="assistant",
-        content=answer
-    )
-
-    conversation.save()
-
-    # ======================================
-    # REPONSE API
-    # ======================================
-
-    return JsonResponse({
-        "conversation_id": conversation.id,
-        "question_originale": message,
-        "question_corrigee": corrected_message,
-        "answer": answer,
-    })
-
-
-# ==========================================
+# =====================================================
 # CHAT CLASSIQUE
-# ==========================================
+# =====================================================
 
 def chat_classique(request):
 
     session_key = request.session.session_key
 
+
     if not session_key:
 
         request.session.create()
 
         session_key = request.session.session_key
+
+
 
     conversation = (
         ChatConversation.objects
@@ -600,16 +354,18 @@ def chat_classique(request):
         .first()
     )
 
+
     if conversation is None:
 
-        conversation = (
-            ChatConversation.objects.create(
-                session_key=session_key,
-                title="Nouvelle conversation"
-            )
+        conversation = ChatConversation.objects.create(
+            session_key=session_key,
+            title="Nouvelle aventure Hyrule"
         )
 
+
     messages = conversation.messages.all()
+
+
 
     return render(
         request,
@@ -619,11 +375,9 @@ def chat_classique(request):
             "messages": messages,
         }
     )
-
-
-# ==========================================
-# API CHAT CLASSIQUE
-# ==========================================
+# =====================================================
+# API CHAT HYRULE AVEC MEMOIRE + RAG
+# =====================================================
 
 @require_POST
 def chat_classique_api(request):
@@ -643,10 +397,13 @@ def chat_classique_api(request):
             status=400
         )
 
+
     message = data.get(
         "message",
         ""
     ).strip()
+
+
 
     if not message:
 
@@ -657,7 +414,30 @@ def chat_classique_api(request):
             status=400
         )
 
+
+
+    # =====================================
+    # CORRECTION ORTHOGRAPHIQUE
+    # =====================================
+
+    try:
+
+        corrected_message = correct_text(
+            message
+        )
+
+    except Exception:
+
+        corrected_message = message
+
+
+
+    # =====================================
+    # SESSION UTILISATEUR
+    # =====================================
+
     session_key = request.session.session_key
+
 
     if not session_key:
 
@@ -665,11 +445,16 @@ def chat_classique_api(request):
 
         session_key = request.session.session_key
 
+
+
     conversation_id = data.get(
         "conversation_id"
     )
 
+
+
     if conversation_id:
+
 
         conversation = get_object_or_404(
             ChatConversation,
@@ -677,29 +462,35 @@ def chat_classique_api(request):
             session_key=session_key
         )
 
+
     else:
+
 
         conversation = (
             ChatConversation.objects
             .filter(
                 session_key=session_key
             )
-            .order_by("-updated_at")
+            .order_by(
+                "-updated_at"
+            )
             .first()
         )
 
+
         if conversation is None:
 
-            conversation = (
-                ChatConversation.objects.create(
-                    session_key=session_key,
-                    title=message[:150]
-                )
+
+            conversation = ChatConversation.objects.create(
+                session_key=session_key,
+                title=message[:150]
             )
 
-    # ======================================
-    # MESSAGE UTILISATEUR
-    # ======================================
+
+
+    # =====================================
+    # SAUVEGARDE QUESTION
+    # =====================================
 
     ChatMessage.objects.create(
         conversation=conversation,
@@ -707,124 +498,217 @@ def chat_classique_api(request):
         content=message
     )
 
-    # ======================================
-    # HISTORIQUE
-    # ======================================
 
-    history = conversation.messages.all()
+
+    # =====================================
+    # MEMOIRE CONVERSATION
+    # =====================================
+
+    history = (
+        conversation.messages
+        .all()
+    )
+
 
     conversation_text = ""
 
+
     for item in history:
 
-        if item.role == "user":
 
-            conversation_text += (
-                f"Utilisateur : "
-                f"{item.content}\n"
-            )
+        conversation_text += (
+            f"{item.role} : "
+            f"{item.content}\n"
+        )
 
-        else:
 
-            conversation_text += (
-                f"Assistant : "
-                f"{item.content}\n"
-            )
 
-    # ======================================
-    # PROMPT
-    # ======================================
-
-    prompt = f"""
-Tu es un assistant conversationnel.
-
-Réponds toujours en français.
-
-Voici l'historique de la conversation :
-
-{conversation_text}
-
-Réponds au dernier message de l'utilisateur
-de manière claire et naturelle.
-
-Assistant :
-"""
-
-    # ======================================
-    # OLLAMA
-    # ======================================
+    # =====================================
+    # RAG ZELDA
+    # =====================================
 
     try:
 
-        response = requests.post(
-            "http://localhost:11434/api/generate",
-            json={
-                "model": "llama3.2:3b",
-                "prompt": prompt,
-                "stream": False,
-                "options": {
-                    "temperature": 0.6,
-                    "num_predict": 250,
-                },
-            },
-            timeout=120
+        context = build_context(
+            corrected_message
         )
+
+
+    except Exception:
+
+
+        context = ""
+
+
+
+    # =====================================
+    # PROMPT FINAL
+    # =====================================
+
+    prompt = build_zelda_prompt(
+        question=corrected_message,
+        context=context,
+        history=conversation_text
+    )
+
+
+
+    # =====================================
+    # APPEL OLLAMA
+    # =====================================
+
+    try:
+
+
+        response = requests.post(
+
+            "http://localhost:11434/api/generate",
+
+            json={
+
+                "model":
+                    "llama3.2:3b",
+
+
+                "prompt":
+                    prompt,
+
+
+                "stream":
+                    False,
+
+
+                "options": {
+
+                    "temperature":
+                        0.3,
+
+
+                    "num_predict":
+                        250,
+
+                },
+
+            },
+
+
+            timeout=120
+
+        )
+
 
         response.raise_for_status()
 
+
+
     except requests.exceptions.RequestException as e:
 
+
         return JsonResponse(
+
             {
-                "error": f"Erreur Ollama : {str(e)}"
+
+                "error":
+                    f"Erreur Ollama : {str(e)}"
+
             },
+
             status=503
+
         )
 
-    # ======================================
-    # REPONSE
-    # ======================================
+
+
+    # =====================================
+    # REPONSE OLLAMA
+    # =====================================
 
     try:
 
+
         ollama_data = response.json()
+
+
 
     except ValueError:
 
+
         return JsonResponse(
+
             {
-                "error": "Réponse Ollama invalide."
+
+                "error":
+                    "Réponse Ollama invalide."
+
             },
+
             status=503
+
         )
+
+
+
 
     answer = ollama_data.get(
         "response",
         ""
     ).strip()
 
+
+
     if not answer:
 
+
         answer = (
-            "Je n'ai pas réussi à générer "
-            "une réponse."
+            "Le Guide d'Hyrule "
+            "n'a pas trouvé de réponse."
         )
 
-    # ======================================
+
+
+    # =====================================
     # SAUVEGARDE REPONSE
-    # ======================================
+    # =====================================
 
     ChatMessage.objects.create(
+
         conversation=conversation,
+
         role="assistant",
+
         content=answer
+
     )
+
+
 
     conversation.save()
 
-    return JsonResponse({
-        "conversation_id": conversation.id,
-        "question": message,
-        "answer": answer,
-    })
 
+
+    # =====================================
+    # RETOUR FRONTEND + PDF
+    # =====================================
+
+    return JsonResponse(
+
+        {
+
+            "conversation_id":
+                conversation.id,
+
+
+            "question":
+                message,
+
+
+            "question_corrigee":
+                corrected_message,
+
+
+            "answer":
+                answer
+
+        }
+
+    )
