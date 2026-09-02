@@ -604,10 +604,45 @@
 @media(max-width:900px){
 
 
-    .chat-classique-container {
+    .chat-page {
+
+        padding:15px;
+
+        margin:0;
+
+    }
 
 
-        grid-template-columns:1fr;
+
+    .chat-layout {
+
+
+        display:flex;
+
+        flex-direction:column;
+
+
+        gap:20px;
+
+
+    }
+
+
+
+
+    /* CHAT EN PREMIER */
+
+
+    .chat-box {
+
+
+        order:1;
+
+
+        min-height:auto;
+
+
+        height:auto;
 
 
         padding:15px;
@@ -617,13 +652,306 @@
 
 
 
-    .chat-sidebar {
+
+
+    .chat-messages {
+
+
+        max-height:450px;
+
+
+        min-height:300px;
+
+
+        padding:12px;
+
+
+    }
+
+
+
+
+
+    .message {
+
+
+        max-width:95%;
+
+
+        font-size:15px;
+
+
+    }
+
+
+
+
+
+
+    /* CATALOGUE QUESTIONS */
+
+
+    .zelda-catalog {
 
 
         order:2;
 
 
+        width:100%;
+
+
+        margin-top:10px;
+
+
+        padding:15px;
+
+
     }
+
+
+
+
+
+    .zelda-catalog h2 {
+
+
+        font-size:20px;
+
+
+    }
+
+
+
+
+
+
+    #question-search,
+
+
+    #category-filter {
+
+
+        font-size:16px;
+
+
+        padding:12px;
+
+
+    }
+
+
+
+
+
+
+
+    .question-list {
+
+
+        display:block;
+
+
+        max-height:350px;
+
+
+        overflow-y:auto;
+
+
+    }
+
+
+
+
+
+
+    .catalog-question {
+
+
+        display:block;
+
+
+        width:100%;
+
+
+        min-height:60px;
+
+
+        font-size:14px;
+
+
+        padding:12px;
+
+
+        margin-bottom:10px;
+
+
+        white-space:normal;
+
+
+    }
+
+
+
+
+
+
+    .chat-input {
+
+
+        flex-direction:column;
+
+
+    }
+
+
+
+
+
+    #message {
+
+
+        width:100%;
+
+
+    }
+
+
+
+
+
+    .chat-input button {
+
+
+        width:100%;
+
+
+        height:45px;
+
+
+    }
+
+
+
+
+
+
+
+    .chat-header {
+
+
+        flex-direction:column;
+
+
+        text-align:center;
+
+
+        padding:15px;
+
+
+    }
+
+
+
+
+    .chat-header h1 {
+
+
+        font-size:26px;
+
+
+    }
+
+
+
+
+    .chat-icon {
+
+
+        width:55px;
+
+
+        height:55px;
+
+
+    }
+
+
+}
+
+
+
+
+
+
+/* PETITS TELEPHONES */
+
+
+@media(max-width:480px){
+
+
+
+    .chat-page {
+
+        padding:10px;
+
+    }
+
+
+
+
+    .chat-box,
+
+    .zelda-catalog {
+
+
+        border-radius:10px;
+
+
+        padding:12px;
+
+
+    }
+
+
+
+
+
+    .chat-messages {
+
+
+        max-height:350px;
+
+
+    }
+
+
+
+
+    .catalog-question {
+
+
+        font-size:13px;
+
+
+        line-height:1.4;
+
+
+    }
+
+
+
+
+
+    .assistant-message p,
+
+    .user-message p {
+
+
+        font-size:14px;
+
+
+    }
+
 
 
 }
