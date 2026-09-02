@@ -562,38 +562,35 @@ def chat_classique_api(request):
 
         response = requests.post(
 
-            "http://localhost:11434/api/generate",
+        "http://localhost:11434/api/generate",
 
-            json={
+        json={
 
-                "model":
-                    "llama3.2:3b",
+            "model": "llama3.2:3b",
 
+            "prompt": prompt,
 
-                "prompt":
-                    prompt,
+            "stream": False,
 
+            "options": {
 
-                "stream":
-                    False,
+                # réponse plus rapide
+                "temperature": 0.2,
 
+                # limite de génération
+                "num_predict": 120,
 
-                "options": {
+                # contexte plus court = plus rapide
+                "num_ctx": 2048,
 
-                    "temperature":
-                        0.3,
-
-
-                    "num_predict":
-                        250,
-
-                },
+                # garde le modèle en mémoire
+                "keep_alive": "10m",
 
             },
 
+        },
 
-            timeout=120
-
+        timeout=60
         )
 
 
